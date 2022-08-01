@@ -1,0 +1,29 @@
+{
+  "name": "nodebackend",
+  "version": "1.0.0",
+  "description": "REST API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "keywords": [
+    "Node",
+    "back-end"
+  ],
+  "author": "Anil",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1140.0",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.3",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.7.5",
+    "nodemon": "^2.0.16",
+    "react-moment": "^1.1.2"
+  }
+}
