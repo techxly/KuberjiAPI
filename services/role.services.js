@@ -1,4 +1,5 @@
 require("dotenv").config();
+const sql = require('mssql')
 const {
     poolPromise
 } = require('../connections/mssql-db');
@@ -10,29 +11,65 @@ const addRole = async (req, res) => {
 
     try {
         const pool = await poolPromise;
-        const result = await pool.request()
+
+        const loginResult = await pool.request()
             .query(`INSERT INTO role
-            (unit
-            ,siteName
-            ,radius
-            ,city
-            ,state
-            ,zipCode
-            ,address)
+            (role
+            ,description,isActive)
         VALUES
-            ('${req.unit}'
-            ,'${req.name}'
-            ,${parseInt(req.radius)}
-            ,'${req.city}'
-            ,'${req.state}'
-            ,${parseInt(req.zipcode)}
-            ,'${req.address}')`
+            ('${req.name}'
+            ,'${req.desc}',
+            ${1})`
             );
-        if (result)
-            return result.recordset;
-        else
+
+
+
+
+        if (loginResult) {
+
+
+            /*
+            
+            const table = new sql.Table('CLASS_TABLE');
+            table.columns.add('moduleId', sql.numeric(4,0), {nullable: false});
+            table.columns.add('roleId', sql.numeric(4,0), {nullable: false});
+            table.columns.add('accessType', sql.char(4), {nullable: false});
+            table.columns.add('isActive', sql.Bit, {nullable: false});
+
+            values.forEach(arr => table.rows.add.apply(null, arr));
+
+            const request = new sql.Request();
+            request.bulk(table, (err, result) => {
+              // ... error checks
+            });
+
+            
+            */
+
+            const table = await pool.table('role');
+            table.columns.add('Id', sql.numeric(4, 0), { nullable: false });
+            table.columns.add('moduleId', sql.numeric(4, 0), { nullable: false });
+            table.columns.add('roleId', sql.numeric(4, 0), { nullable: false });
+            table.columns.add('accessType', sql.char(4), { nullable: false });
+            table.columns.add('isActive', sql.bit, { nullable: false });
+
+            req.list.forEach(arr => table.rows.add.apply(null, arr));
+
+            const request = await pool.request();
+
+            request.bulk(table, (err, result) => {
+                if (result)
+                    return result.recordset;
+                else
+                    return null;
+            });
+
+        } else
             return null;
     } catch (error) {
+
+        console.log('error', error)
+
         res.status(500);
         return error.message;
     }
@@ -94,8 +131,7 @@ const deleteRole = async (req, res) => {
         const pool = await poolPromise;
 
         const result = await pool.request()
-            .query(`UPDATE site
-                SET isActive=0
+            .query(`DELETE from role
                 WHERE id=${req.id}`
             );
 

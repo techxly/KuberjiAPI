@@ -42,7 +42,7 @@ const getModules = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .query(`SELECT * FROM role WHERE isActive=1`);
+            .query(`SELECT id,name FROM modules WHERE isActive=1`);
         if (result)
             return result.recordset;
         else

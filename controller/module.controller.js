@@ -8,7 +8,7 @@ const getModules = (req, res) => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'siteData': resData
+                'moduleData': resData
             })
         })
         .catch(error => {

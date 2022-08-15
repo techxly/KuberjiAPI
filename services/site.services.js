@@ -69,12 +69,12 @@ const updateSite = async (req, res) => {
                 SET
                  unit='${req.unit}'
                 ,siteName='${req.name}'
-                ,radius='${req.radius}'
+                ,radius=${parseInt(req.radius)}
                 ,city='${req.city}'
                 ,state='${req.state}'
-                ,zipCode='${req.zipcode}'
+                ,zipCode=${parseInt(req.zipcode)}
                 ,address='${req.address}' 
-            WHERE id=${req.id} AND isActive=1`
+            WHERE id=${parseInt(req.id)} AND isActive=1`
             );
 
         console.log('result', result)
@@ -85,7 +85,8 @@ const updateSite = async (req, res) => {
         else
             return null;
     } catch (error) {
-        res.status(500);
+        res.status(500, error.message);
+        console.log(error.message)
         return error.message;
     }
 }
