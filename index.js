@@ -22,6 +22,7 @@ require("./routes/site.routes")(app);
 require("./routes/holiday.routes")(app);
 require("./routes/role.routes")(app);
 require("./routes/module.routes")(app);
+require("./routes/file.routes")(app);
 
 const PORT = process.env.PORT || 5000;
 

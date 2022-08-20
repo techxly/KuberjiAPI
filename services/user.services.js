@@ -10,7 +10,18 @@ const getAllUsers = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .query(`SELECT * FROM employee`);
+            .query(`SELECT e.id, e.employeeCode, e.firstName +' '+ e.lastName as name, e.email, e.mobile, e.doj,s.siteName, r.role  FROM 
+            employee as e INNER JOIN 
+            employee_role as er ON e.id = er.employeeId INNER JOIN
+			role as r ON r.id = er.roleId INNER JOIN
+            employee_site as es ON e.id = es.employeeId INNER JOIN 
+            [site] as s ON s.id = es.siteId
+            AND e.isActive = 1`);
+
+
+        console.log('result.recordset', result.recordset)
+
+
         if (result)
             return result.recordset;
         else
@@ -57,7 +68,31 @@ const addUser = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .query(`SELECT * FROM employee`);
+            .input('userName', req.userName)
+            .input('password', req.password)
+            .input('lastLogin', '')
+            .input('firstName', req.fName)
+            .input('lastName', req.lName)
+            .input('gender', req.gender)
+            .input('mobile', req.mobile)
+            .input('doj', req.joiningDate)
+            .input('dob', req.birthDate)
+            .input('email', req.email)
+            .input('bloodGroup', req.bloodGroup)
+            .input('salary', req.salary)
+            .input('address', req.address)
+            .input('city', req.city)
+            .input('state', req.state)
+            .input('zipCode', req.zipcode)
+            .input('image', req.userName)
+            .input('employeeCode', req.userName)
+            .input('emergencyNumber', req.altMobile)
+            .input('isActive', 1)
+            .input('role', req.role)
+            .input('site', req.site)
+            .execute(`addUser`);
+        console.log(result);
+
         if (result)
             return result.recordset;
         else

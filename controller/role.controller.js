@@ -8,7 +8,7 @@ const getRoles = (req, res) => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'siteData': resData
+                'roleData': resData
             })
         })
         .catch(error => {

@@ -46,7 +46,7 @@ const getAllUsers = (req, res) => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'data': resData
+                'userData': resData
             })
         })
         .catch(error => {
