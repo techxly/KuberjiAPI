@@ -1,11 +1,11 @@
-const { uploadImage, code } = require('../services/file.services');
+const { uploadImage, data } = require('../services/file.services');
 
 exports.uploadImage = uploadImage;
 exports.upload = (req, res) => {
 
-    console.log('req.body', req['userImages'])
+    console.log('data', data)
 
     res.status(200).json({
-        code: code
+        fileData: data
     })
 } 

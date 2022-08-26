@@ -28,7 +28,64 @@ const addUser = (req, res) => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'data': resData
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
+const updateUser = (req, res) => {
+
+    return userService.updateUser(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(500).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
+const deleteUser = (req, res) => {
+
+    return userService.deleteUser(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(500).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
+const getUserById = (req, res) => {
+
+    return userService.getUserById(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
             })
         })
         .catch(error => {
@@ -81,6 +138,9 @@ module.exports = {
     login: login,
     addUser: addUser,
     getUser: getUser,
+    updateUser: updateUser,
+    deleteUser: deleteUser,
+    getUserById: getUserById,
     getAllUsers: getAllUsers
 
 }
