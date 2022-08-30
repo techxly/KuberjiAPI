@@ -133,9 +133,28 @@ const login = (req, res) => {
             })
         })
 }
+const verifyToken = (req, res) => {
+    return userService.verifyToken(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 module.exports = {
     login: login,
+    verifyToken: verifyToken,
     addUser: addUser,
     getUser: getUser,
     updateUser: updateUser,

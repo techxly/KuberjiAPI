@@ -69,6 +69,49 @@ const login = async (req, res) => {
     }
 }
 
+const verifyToken = async (req, res) => {
+
+
+    try {
+
+
+        let jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+        console.log(req.headers.Authorization, req)
+        const token = req.headers.Authorization;
+        const verified = jwt.verify(token, jwtSecretKey);
+
+        console.log('verified', verified)
+
+
+        if (verified) {
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .query(`SELECT e.id,e.userName, e.email, e.firstName+' '+e.lastName as fullName, r.role  from employee as e
+            INNER JOIN employee_role as er on er.employeeId = e.id
+            INNER JOIN role as r on r.Id = er.roleId
+            WHERE e.id = '${verified.userId}' 
+            AND e.isActive = 1
+            AND er.isActive = 1
+            AND r.isActive = 1
+            `)
+
+            if (result)
+                return result.recordset;
+            else
+                return null;
+        }
+        else {
+            return null;
+        }
+    } catch (error) {
+        res.status(500);
+        console.log('error', error)
+        return error.message;
+    }
+}
+
+
 const addUser = async (req, res) => {
     try {
         const pool = await poolPromise;
@@ -195,7 +238,7 @@ const getUser = async (req, res) => {
                 userId = decoded.payload.userId;
                 const pool = await poolPromise;
                 const result = await pool.request()
-                    .query(`SELECT e.id, e.userName, e.firstName, e.email, e.employeeCode, r.role  FROM employee as e INNER JOIN 
+                    .execute(`SELECT e.id, e.userName, e.firstName, e.email, e.employeeCode, r.role  FROM employee as e INNER JOIN 
             employee_role as er ON e.id = er.employeeId INNER JOIN 
             role as r ON r.id = er.roleId
             WHERE e.id = ${userId} 
@@ -273,6 +316,7 @@ const getUserById = async (req, res) => {
 }
 
 module.exports = {
+    verifyToken: verifyToken,
     login: login,
     addUser: addUser,
     getUser: getUser,
