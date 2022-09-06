@@ -3,7 +3,7 @@ const payrollService = require('../services/payroll.services');
 
 const getPayroll = (req, res) => {
 
-    return payrollService.getPayroll()
+    return payrollService.getPayroll(req.body)
         .then(resData => {
             res.status(200).json({
                 'success': true,
@@ -20,6 +20,25 @@ const getPayroll = (req, res) => {
         })
 }
 
+const getPaySlipDetails = (req, res) => {
+    console.log('req.body', req.body)
+
+    return payrollService.getPaySlipDetails(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'paySlipData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 const getPayrollById = (req, res) => {
     console.log('req.body', req.body)
 
@@ -68,7 +87,7 @@ const updatePayroll = (req, res) => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'data': resData
+                'payrollData': resData
             })
         })
         .catch(error => {
@@ -104,6 +123,7 @@ const deletePayroll = (req, res) => {
 module.exports = {
     addPayroll: addPayroll,
     getPayrollById: getPayrollById,
+    getPaySlipDetails: getPaySlipDetails,
     getPayroll: getPayroll,
     updatePayroll: updatePayroll,
     deletePayroll: deletePayroll

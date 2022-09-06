@@ -45,7 +45,32 @@ const getPayroll = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
+            .input('aMonth', req.month)
+            .input('aYear', req.year)
             .execute(`getPayroll`);
+        if (result)
+            return result.recordset;
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
+const getPaySlipDetails = async (req, res) => {
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('PayRollId', req.id)
+            .input('aMonth', req.month)
+            .input('aYear', req.year)
+            .execute(`getPaySlipDetails`);
+
+        console.log(result.recordset[0])
+
+
         if (result)
             return result.recordset;
         else
@@ -75,24 +100,24 @@ const getPayrollById = async (req, res) => {
 
 const updatePayroll = async (req, res) => {
 
-    console.log(req)
+
+    console.log('req', req)
 
     try {
         const pool = await poolPromise;
 
 
         const result = await pool.request()
-            .query(`UPDATE site
-                SET
-                 unit='${req.unit}'
-                ,siteName='${req.name}'
-                ,radius=${parseInt(req.radius)}
-                ,city='${req.city}'
-                ,state='${req.state}'
-                ,zipCode=${parseInt(req.zipcode)}
-                ,address='${req.address}' 
-            WHERE id=${parseInt(req.id)} AND isActive=1`
-            );
+
+            .input('payrollId', req.id)
+            .input('aMonth', req.month)
+            .input('aYear', req.year)
+            .input('salary', req.salary)
+            .input('overTime', req.overTime)
+            .input('bonus', req.bonus)
+            .input('deduction', req.deduction)
+            .input('netTotal', req.netTotal)
+            .execute(`updatePayroll`);
 
         console.log('result', result)
 
@@ -134,6 +159,7 @@ module.exports = {
     addPayroll: addPayroll,
     getPayroll: getPayroll,
     getPayrollById: getPayrollById,
+    getPaySlipDetails: getPaySlipDetails,
     updatePayroll: updatePayroll,
     deletePayroll: deletePayroll
 }

@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 
 require("./routes/user.routes")(app);
 require("./routes/site.routes")(app);
+require("./routes/leaves.routes")(app);
 require("./routes/payroll.routes")(app);
 require("./routes/holiday.routes")(app);
 require("./routes/role.routes")(app);

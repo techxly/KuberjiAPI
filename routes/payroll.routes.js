@@ -4,7 +4,8 @@ module.exports = app => {
     const payrollController = require('../controller/payroll.controller');
 
 
-    router.get('/getPayroll', payrollController.getPayroll);
+    router.post('/getPayroll', payrollController.getPayroll);
+    router.post('/getPaySlipDetails', payrollController.getPaySlipDetails);
     router.post('/getPayrollById', payrollController.getPayrollById);
     router.post('/addPayroll', payrollController.addPayroll);
     router.post('/updatePayroll', payrollController.updatePayroll);
