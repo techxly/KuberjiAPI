@@ -11,6 +11,14 @@ var cors = require('cors');
 
 app.use(cors());
 
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
 app.get('/', (req, res) => {
     res.json({
         message: "Welcome"
@@ -25,6 +33,7 @@ require("./routes/holiday.routes")(app);
 require("./routes/role.routes")(app);
 require("./routes/module.routes")(app);
 require("./routes/file.routes")(app);
+require("./routes/attendance.routes")(app);
 
 const PORT = process.env.PORT || 5000;
 

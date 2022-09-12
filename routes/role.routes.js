@@ -8,6 +8,7 @@ module.exports = app => {
     router.post('/addRole', roleController.addRole);
     router.post('/updateRole', roleController.updateRole);
     router.post('/deleteRole', roleController.deleteRole);
+    router.post('/getRights', roleController.getRights);
 
     app.use('/api', router);
 }

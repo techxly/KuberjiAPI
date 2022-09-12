@@ -28,7 +28,7 @@ const addRole = (req, res) => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'data': resData
+                'roleData': resData
             })
         })
         .catch(error => {
@@ -79,11 +79,31 @@ const deleteRole = (req, res) => {
         })
 }
 
+const getRights = (req, res) => {
+
+    return roleService.getRights(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'rights': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 
 
 module.exports = {
     addRole: addRole,
     getRoles: getRoles,
     updateRole: updateRole,
-    deleteRole: deleteRole
+    deleteRole: deleteRole,
+    getRights: getRights
 }

@@ -104,9 +104,10 @@ const getLeaveTypes = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .execute(`getLeaveTypes`);
+        .execute(`getLeaveTypes`);
+       //.execute(`getLeaveBalance_1`);
 
-        console.log('result.recordset', result.recordset)
+        console.log('result.getLeaveBalance_1', result.recordset)
 
         if (result)
             return result.recordset;
@@ -128,6 +129,42 @@ const getAllLeaves = async (req, res) => {
 
         if (result)
             return result.recordset;
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
+const getLeaveBalance = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .execute(`getLeaveBalance`);
+
+        console.log('result.recordset', result.recordsets)
+
+        if (result)
+            return result.recordsets;
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
+const getLeaveBalanceAction = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .execute(`getLeaveBalanceAction`);
+
+        console.log('result.recordset', result.recordsets)
+
+        if (result)
+            return result.recordsets;
         else
             return null;
     } catch (error) {
@@ -285,4 +322,6 @@ module.exports = {
     updateLeaves: updateLeaves,
     deleteLeaves: deleteLeaves,
     getAllLeaves: getAllLeaves,
+    getLeaveBalance: getLeaveBalance,
+    getLeaveBalanceAction: getLeaveBalanceAction,
 }

@@ -230,6 +230,51 @@ const getAllLeaves = (req, res) => {
         })
 }
 
+const getLeaveBalance = (req, res) => {
+
+
+    console.log("hello123")
+
+
+    return leavesService.getLeaveBalance()
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'leaveBalance': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+const getLeaveBalanceAction = (req, res) => {
+
+
+    console.log("hello123")
+
+
+    return leavesService.getLeaveBalanceAction()
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'leaveBalance': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 module.exports = {
     updateLeaveType: updateLeaveType,
     updateLeaveTypeStatus: updateLeaveTypeStatus,
@@ -243,4 +288,6 @@ module.exports = {
     updateLeaves: updateLeaves,
     deleteLeaves: deleteLeaves,
     getAllLeaves: getAllLeaves,
+    getLeaveBalance: getLeaveBalance,
+    getLeaveBalanceAction: getLeaveBalanceAction,
 }

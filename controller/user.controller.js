@@ -21,6 +21,7 @@ const getUser = (req, res) => {
 }
 
 
+
 const addUser = (req, res) => {
 
     return userService.addUser(req.body)
@@ -96,6 +97,24 @@ const getUserById = (req, res) => {
             })
         })
 }
+const getUserProfile = (req, res) => {
+
+    return userService.getUserProfile(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 const getAllUsers = (req, res) => {
     return userService.getAllUsers()
@@ -104,6 +123,24 @@ const getAllUsers = (req, res) => {
                 'success': true,
                 'code': 200,
                 'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
+const getUserCount = (req, res) => {
+    return userService.getUserCount()
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userCount': resData
             })
         })
         .catch(error => {
@@ -156,7 +193,9 @@ module.exports = {
     login: login,
     verifyToken: verifyToken,
     addUser: addUser,
+    getUserCount: getUserCount,
     getUser: getUser,
+    getUserProfile: getUserProfile,
     updateUser: updateUser,
     deleteUser: deleteUser,
     getUserById: getUserById,

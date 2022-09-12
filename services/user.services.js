@@ -11,7 +11,7 @@ const getAllUsers = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .query(`SELECT e.id, e.userName, e.employeeCode, e.firstName +' '+ e.lastName as name, e.email, e.mobile, e.doj,s.siteName, r.role, s.id AS siteId, r.id AS roleId FROM 
+            .query(`SELECT e.id, e.userName, e.image, e.employeeCode, e.firstName +' '+ e.lastName as name, e.email, e.mobile, e.doj,s.siteName, r.role, s.id AS siteId, r.id AS roleId FROM 
             employee as e INNER JOIN 
             employee_role as er ON e.id = er.employeeId INNER JOIN
 			role as r ON r.id = er.roleId INNER JOIN
@@ -19,12 +19,35 @@ const getAllUsers = async (req, res) => {
             [site] as s ON s.id = es.siteId
             AND e.isActive = 1`);
 
+        if (result) {
 
-        console.log('result.recordset', result.recordset)
+            result.recordset.forEach(element => {
+                let ext = element.image.split('.');
+                const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
+                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+            });
 
-
-        if (result)
             return result.recordset;
+        }
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+const getUserCount = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .query(`SELECT COUNT(id) as userCount from employee where isActive = 1`);
+
+        console.log('result', result.recordset[0].userCount)
+
+
+        if (result) {
+            return result.recordset[0].userCount;
+        }
         else
             return null;
     } catch (error) {
@@ -41,6 +64,7 @@ const login = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .query(`SELECT id, password from employee WHERE userName = '${req.userName}' AND isActive = 1`);
+
         if (result) {
             let id = result.recordset[0].id
             let h_password = result.recordset[0].password
@@ -55,6 +79,8 @@ const login = async (req, res) => {
                 }
 
                 token = jwt.sign(Data, jwtSecretKey);
+
+                console.log('token', token)
             }
             return token;
         }
@@ -113,6 +139,11 @@ const verifyToken = async (req, res) => {
 
 
 const addUser = async (req, res) => {
+
+
+    console.log('req', req)
+
+
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -141,8 +172,14 @@ const addUser = async (req, res) => {
             .execute(`addUser`);
         console.log(result);
 
-        if (result)
+        if (result) {
+            result.recordset.forEach(element => {
+                let ext = element.image.split('.');
+                const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
+                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+            });
             return result.recordset;
+        }
         else
             return null;
     } catch (error) {
@@ -154,7 +191,7 @@ const addUser = async (req, res) => {
 const updateUser = async (req, res) => {
 
 
-    console.log('req----->', req)
+    console.log('req---00000-->', req)
 
 
     try {
@@ -181,10 +218,22 @@ const updateUser = async (req, res) => {
             .input('role', req.role)
             .execute('editUser');
 
-        console.log("result ====> ", result.recordset);
 
-        if (result)
+
+        if (result.recordset.length > 0) {
+
+
+            result.recordset.forEach(element => {
+
+                console.log("result ====> ", element);
+                let ext = element.image.split('.');
+                const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
+                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+            });
+
+            console.log('result.recordset', result.recordset)
             return result.recordset;
+        }
         else
             return null;
     } catch (error) {
@@ -206,10 +255,19 @@ const deleteUser = async (req, res) => {
             .input('ids', req.ids.join(","))
             .execute('deleteUser');
 
-        console.log("result deleted ====> ", result);
 
-        if (result)
+
+        if (result) {
+            result.recordset.forEach(element => {
+                let ext = element.image.split('.');
+                const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
+                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+            });
+
+            console.log("result deleted ====> ", result.recordset);
+
             return result.recordset;
+        }
         else
             return null;
     } catch (error) {
@@ -232,19 +290,24 @@ const getUser = async (req, res) => {
         if (verified) {
             const decoded = jwt.decode(token, { complete: true });
 
-            console.log(decoded)
+            console.log("decoded", decoded)
 
             if (decoded) {
                 userId = decoded.payload.userId;
                 const pool = await poolPromise;
                 const result = await pool.request()
-                    .execute(`SELECT e.id, e.userName, e.firstName, e.email, e.employeeCode, r.role  FROM employee as e INNER JOIN 
+                    .query(`SELECT e.id, e.userName, e.firstName, e.email, e.employeeCode, r.role  FROM employee as e INNER JOIN 
             employee_role as er ON e.id = er.employeeId INNER JOIN 
             role as r ON r.id = er.roleId
             WHERE e.id = ${userId} 
             AND e.isActive = 1 
             AND er.isActive = 1 
             AND r.isActive = 1`);
+
+
+                console.log('result-->getUser', result)
+
+
                 if (result)
                     return result.recordset[0];
                 else
@@ -314,14 +377,61 @@ const getUserById = async (req, res) => {
         return error.message;
     }
 }
+const getUserProfile = async (req, res) => {
+
+    console.log('req', req)
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .query(`SELECT e.[id]
+            ,e.[userName]
+            ,e.[firstName]
+            ,e.[lastName]
+            ,r.role
+            ,e.[image]
+            ,e.[employeeCode]
+             FROM 
+                  employee as e INNER JOIN 
+                  employee_role as er ON e.id = er.employeeId INNER JOIN
+                  role as r ON r.id = er.roleId  
+                  WHERE e.isActive = 1
+                  AND e.id=${req.id}`);
+
+
+        console.log('orgImage', result.recordset)
+
+        if (result.recordset.length > 0) {
+
+            let orgImage = result.recordset[0].image;
+
+            result.recordset[0].imageName = orgImage
+
+            let ext = orgImage.split('.');
+
+            const image = fs.readFileSync(`public/users/${result.recordset[0].image}`, 'base64');
+
+            result.recordset[0].img = `data:image/${ext[ext.length - 1]};base64,${image}`
+
+            return result.recordset[0];
+        }
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
 
 module.exports = {
     verifyToken: verifyToken,
     login: login,
     addUser: addUser,
     getUser: getUser,
+    getUserProfile: getUserProfile,
     updateUser: updateUser,
     deleteUser: deleteUser,
     getUserById: getUserById,
-    getAllUsers: getAllUsers
+    getAllUsers: getAllUsers,
+    getUserCount: getUserCount
 }

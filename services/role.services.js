@@ -7,8 +7,6 @@ const roleController = require('../controller/site.controller');
 
 const addRole = async (req, res) => {
 
-    console.log(req.name)
-
     try {
         const pool = await poolPromise;
 
@@ -25,7 +23,7 @@ const addRole = async (req, res) => {
         const maxId = await pool.request()
             .query(`SELECT MAX(id) as maxId FROM role;`
             );
-            
+
         if (maxId && result) {
             await pool.connect();
             const table = new sql.Table('role_module');
@@ -50,25 +48,19 @@ const addRole = async (req, res) => {
             });
 
 
+            const result = await pool.request()
+                .query(`SELECT * FROM role WHERE isActive=1`);
+            if (result) {
+
+                console.log('result.recordset', result.recordset)
+                return result.recordset;
+            }
+            else {
+                return null;
+            }
 
 
-            // const table = await pool.table('role');
-            // table.columns.add('Id', sql.numeric(4, 0), { nullable: false });
-            // table.columns.add('moduleId', sql.numeric(4, 0), { nullable: false });
-            // table.columns.add('roleId', sql.numeric(4, 0), { nullable: false });
-            // table.columns.add('accessType', sql.char(4), { nullable: false });
-            // table.columns.add('isActive', sql.bit, { nullable: false });
 
-            // req.list.forEach(arr => table.rows.add.apply(null, arr));
-
-            // const request = await pool.request();
-
-            // request.bulk(table, (err, result) => {
-            //     if (result)
-            //         return result.recordset;
-            //     else
-            //         return null;
-            // });
         }
         else
             return null;
@@ -111,20 +103,54 @@ const updateRole = async (req, res) => {
     try {
         const pool = await poolPromise;
 
+        // await pool.connect();
+         const table = new sql.Table('role_module');
+         table.columns.add('id', sql.Numeric(4, 0), { nullable: true });
+         table.columns.add('accessType', sql.Char(4), { nullable: true });
 
+         const rights = req.list;
+         rights.forEach(r => {
+             table.rows.add(
+                 r.id,
+                 r.accessType
+             )
+         });
+
+         console.log('table', table)
         const result = await pool.request()
-            .query(`UPDATE role
-                SET
-                role='${req.name}'
-                ,description='${req.description}'
-            WHERE id=${req.id} AND isActive=1`
-            );
+            .input('role_modulee', table)
+            .input('id', parseInt(req.id))
+            .input('role', req.name)
+            .input('description', req.description)
+            .execute(`updateRole`);
 
         console.log('result', result)
 
 
-        if (result)
+
+
+        return result.recordset;
+
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
+const getRights = async (req, res) => {
+
+    console.log('req', req)
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('id', req.id)
+            .execute(`getRights`);
+
+        if (result) {
+            console.log('result.recordset', result.recordset)
             return result.recordset;
+        }
         else
             return null;
     } catch (error) {
@@ -132,6 +158,7 @@ const updateRole = async (req, res) => {
         return error.message;
     }
 }
+
 const deleteRole = async (req, res) => {
 
     console.log('req', req)
@@ -158,5 +185,6 @@ module.exports = {
     addRole: addRole,
     getRoles: getRoles,
     updateRole: updateRole,
-    deleteRole: deleteRole
+    deleteRole: deleteRole,
+    getRights: getRights
 }

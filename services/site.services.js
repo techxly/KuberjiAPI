@@ -46,8 +46,19 @@ const getSite = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .query(`SELECT * FROM site WHERE isActive=1`);
-        if (result)
-            return result.recordset;
+        if (result) {
+            let newData = [];
+
+            result.recordset.map((item, index) => {
+
+                newData.push({ srno: index + 1, ...item })
+
+            })
+
+
+            return newData;
+        }
+
         else
             return null;
     } catch (error) {
