@@ -44,7 +44,6 @@ const addRole = async (req, res) => {
 
             const request = pool.request();
             request.bulk(table, (err, result) => {
-                console.log('err', err)
             });
 
 
@@ -52,7 +51,6 @@ const addRole = async (req, res) => {
                 .query(`SELECT * FROM role WHERE isActive=1`);
             if (result) {
 
-                console.log('result.recordset', result.recordset)
                 return result.recordset;
             }
             else {
@@ -69,8 +67,6 @@ const addRole = async (req, res) => {
 
     } catch (error) {
 
-        console.log('error', error)
-
         res.status(500);
         return error.message;
     }
@@ -82,8 +78,6 @@ const getRoles = async (req, res) => {
         const result = await pool.request()
             .query(`SELECT * FROM role WHERE isActive=1`);
         if (result) {
-
-            console.log('result.recordset', result.recordset)
 
             return result.recordset;
         }
@@ -97,8 +91,6 @@ const getRoles = async (req, res) => {
 }
 
 const updateRole = async (req, res) => {
-
-    console.log(req)
 
     try {
         const pool = await poolPromise;
@@ -116,17 +108,12 @@ const updateRole = async (req, res) => {
              )
          });
 
-         console.log('table', table)
         const result = await pool.request()
             .input('role_modulee', table)
             .input('id', parseInt(req.id))
             .input('role', req.name)
             .input('description', req.description)
             .execute(`updateRole`);
-
-        console.log('result', result)
-
-
 
 
         return result.recordset;
@@ -139,8 +126,6 @@ const updateRole = async (req, res) => {
 
 const getRights = async (req, res) => {
 
-    console.log('req', req)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -148,7 +133,6 @@ const getRights = async (req, res) => {
             .execute(`getRights`);
 
         if (result) {
-            console.log('result.recordset', result.recordset)
             return result.recordset;
         }
         else
@@ -160,8 +144,6 @@ const getRights = async (req, res) => {
 }
 
 const deleteRole = async (req, res) => {
-
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;

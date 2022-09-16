@@ -21,7 +21,6 @@ const getPayroll = (req, res) => {
 }
 
 const getPaySlipDetails = (req, res) => {
-    console.log('req.body', req.body)
 
     return payrollService.getPaySlipDetails(req.body)
         .then(resData => {
@@ -40,7 +39,6 @@ const getPaySlipDetails = (req, res) => {
         })
 }
 const getPayrollById = (req, res) => {
-    console.log('req.body', req.body)
 
     return payrollService.getPayrollById(req.body)
         .then(resData => {

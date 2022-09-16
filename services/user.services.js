@@ -42,9 +42,6 @@ const getUserCount = async (req, res) => {
         const result = await pool.request()
             .query(`SELECT COUNT(id) as userCount from employee where isActive = 1`);
 
-        console.log('result', result.recordset[0].userCount)
-
-
         if (result) {
             return result.recordset[0].userCount;
         }
@@ -57,8 +54,6 @@ const getUserCount = async (req, res) => {
 }
 
 const login = async (req, res) => {
-
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -80,17 +75,14 @@ const login = async (req, res) => {
 
                 token = jwt.sign(Data, jwtSecretKey);
 
-                console.log('token', token)
             }
             return token;
         }
         else {
-            console.log(2)
             return null;
         }
     } catch (error) {
         res.status(500);
-        console.log('error', error)
         return error.message;
     }
 }
@@ -103,12 +95,8 @@ const verifyToken = async (req, res) => {
 
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-        console.log(req.headers.Authorization, req)
         const token = req.headers.Authorization;
         const verified = jwt.verify(token, jwtSecretKey);
-
-        console.log('verified', verified)
-
 
         if (verified) {
             const pool = await poolPromise;
@@ -132,16 +120,12 @@ const verifyToken = async (req, res) => {
         }
     } catch (error) {
         res.status(500);
-        console.log('error', error)
         return error.message;
     }
 }
 
 
 const addUser = async (req, res) => {
-
-
-    console.log('req', req)
 
 
     try {
@@ -170,7 +154,6 @@ const addUser = async (req, res) => {
             .input('role', req.role)
             .input('site', req.site)
             .execute(`addUser`);
-        console.log(result);
 
         if (result) {
             result.recordset.forEach(element => {
@@ -189,9 +172,6 @@ const addUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-
-
-    console.log('req---00000-->', req)
 
 
     try {
@@ -225,28 +205,22 @@ const updateUser = async (req, res) => {
 
             result.recordset.forEach(element => {
 
-                console.log("result ====> ", element);
                 let ext = element.image.split('.');
                 const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
                 element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
             });
 
-            console.log('result.recordset', result.recordset)
             return result.recordset;
         }
         else
             return null;
     } catch (error) {
         res.status(500);
-        console.log('error.message', error.message)
         return error.message;
     }
 }
 
 const deleteUser = async (req, res) => {
-
-
-    console.log('req----->', req)
 
 
     try {
@@ -264,15 +238,12 @@ const deleteUser = async (req, res) => {
                 element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
             });
 
-            console.log("result deleted ====> ", result.recordset);
-
             return result.recordset;
         }
         else
             return null;
     } catch (error) {
         res.status(500);
-        console.log('error.message', error.message)
         return error.message;
     }
 }
@@ -283,14 +254,11 @@ const getUser = async (req, res) => {
     try {
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-        console.log(req.headers.Authorization, req)
         const token = req.headers.Authorization;
         const verified = jwt.verify(token, jwtSecretKey);
         let userId;
         if (verified) {
             const decoded = jwt.decode(token, { complete: true });
-
-            console.log("decoded", decoded)
 
             if (decoded) {
                 userId = decoded.payload.userId;
@@ -303,9 +271,6 @@ const getUser = async (req, res) => {
             AND e.isActive = 1 
             AND er.isActive = 1 
             AND r.isActive = 1`);
-
-
-                console.log('result-->getUser', result)
 
 
                 if (result)
@@ -321,7 +286,6 @@ const getUser = async (req, res) => {
 }
 const getUserById = async (req, res) => {
 
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -356,14 +320,9 @@ const getUserById = async (req, res) => {
         if (result) {
 
 
-
             let orgImage = result.recordset[0].image;
 
-            console.log('orgImage', orgImage)
-
-
             result.recordset[0].imageName = orgImage
-
 
             const image = fs.readFileSync(`public/users/${orgImage}`, 'base64');
 
@@ -379,7 +338,6 @@ const getUserById = async (req, res) => {
 }
 const getUserProfile = async (req, res) => {
 
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -399,7 +357,6 @@ const getUserProfile = async (req, res) => {
                   AND e.id=${req.id}`);
 
 
-        console.log('orgImage', result.recordset)
 
         if (result.recordset.length > 0) {
 

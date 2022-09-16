@@ -6,8 +6,6 @@ const holidayController = require('../controller/holiday.controller');
 
 const addHoliday = async (req, res) => {
 
-    console.log(req)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -38,7 +36,6 @@ const getHoliday = async (req, res) => {
         const result = await pool.request()
             .query(`SELECT * FROM holiday WHERE isActive=1`);
         if (result) {
-            console.log(result.recordset)
             return result.recordset;
         }
         else
@@ -51,8 +48,6 @@ const getHoliday = async (req, res) => {
 
 const updateHoliday = async (req, res) => {
 
-    console.log(req)
-
     try {
         const pool = await poolPromise;
 
@@ -64,22 +59,16 @@ const updateHoliday = async (req, res) => {
             WHERE id='${parseInt(req.id)}' AND isActive=${1}`
             );
 
-        console.log('result', result)
-
-
         if (result)
             return result.recordset;
         else
             return null;
     } catch (error) {
         res.status(500, error.message);
-        console.log(error.message)
         return error.message;
     }
 }
 const deleteHoliday = async (req, res) => {
-
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;

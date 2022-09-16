@@ -6,8 +6,6 @@ const moduleController = require('../controller/module.controller');
 
 const addModule = async (req, res) => {
 
-    console.log(req.name)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -55,8 +53,6 @@ const getModules = async (req, res) => {
 
 const updateModule = async (req, res) => {
 
-    console.log(req)
-
     try {
         const pool = await poolPromise;
 
@@ -74,9 +70,6 @@ const updateModule = async (req, res) => {
             WHERE id=${req.id} AND isActive=1`
             );
 
-        console.log('result', result)
-
-
         if (result)
             return result.recordset;
         else
@@ -87,8 +80,6 @@ const updateModule = async (req, res) => {
     }
 }
 const deleteModule = async (req, res) => {
-
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;

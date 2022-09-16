@@ -49,7 +49,6 @@ const updateLeaveType = async (req, res) => {
     }
 }
 const updateLeaveTypeStatus = async (req, res) => {
-    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -67,8 +66,6 @@ const updateLeaveTypeStatus = async (req, res) => {
     }
 }
 const addLeaves = async (req, res) => {
-
-    console.log(req.name)
 
     try {
         const pool = await poolPromise;
@@ -107,8 +104,6 @@ const getLeaveTypes = async (req, res) => {
         .execute(`getLeaveTypes`);
        //.execute(`getLeaveBalance_1`);
 
-        console.log('result.getLeaveBalance_1', result.recordset)
-
         if (result)
             return result.recordset;
         else
@@ -124,8 +119,6 @@ const getAllLeaves = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .execute(`getAllLeaves`);
-
-        console.log('result.recordset', result.recordset)
 
         if (result)
             return result.recordset;
@@ -143,8 +136,6 @@ const getLeaveBalance = async (req, res) => {
         const result = await pool.request()
             .execute(`getLeaveBalance`);
 
-        console.log('result.recordset', result.recordsets)
-
         if (result)
             return result.recordsets;
         else
@@ -160,8 +151,6 @@ const getLeaveBalanceAction = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .execute(`getLeaveBalanceAction`);
-
-        console.log('result.recordset', result.recordsets)
 
         if (result)
             return result.recordsets;
@@ -179,8 +168,6 @@ const getLeaveTypesById = async (req, res) => {
         const result = await pool.request()
             .input('typeId', req.id)
             .execute(`getLeaveTypesById`);
-
-        console.log('result.recordset', result.recordset)
 
         if (result)
             return result.recordset;
@@ -219,9 +206,6 @@ const getPaySlipDetails = async (req, res) => {
             .input('aYear', req.year)
             .execute(`getPaySlipDetails`);
 
-        console.log(result.recordset[0])
-
-
         if (result)
             return result.recordset;
         else
@@ -240,8 +224,6 @@ const getLeavesById = async (req, res) => {
             .input('id', req.id)
             .execute(`getLeaveById`);
 
-        console.log('result.recordset', result.recordset)
-
         if (result)
             return result.recordset;
         else
@@ -255,8 +237,6 @@ const getLeavesById = async (req, res) => {
 const updateLeaves = async (req, res) => {
 
 
-    console.log('req---###--->', req)
-
     try {
         const pool = await poolPromise;
 
@@ -268,25 +248,17 @@ const updateLeaves = async (req, res) => {
             .input('status', req.status)
             .execute(`updateLeaves`);
 
-        console.log('result', result)
-
-
         if (result)
             return result.recordset;
         else
             return null;
     } catch (error) {
 
-        console.log('res', error)
-
         res.status(500, error.message);
-        console.log(error.message)
         return error.message;
     }
 }
 const deleteLeaves = async (req, res) => {
-
-    console.log('req----->', req)
 
     try {
         const pool = await poolPromise;
@@ -294,15 +266,12 @@ const deleteLeaves = async (req, res) => {
             .input('ids', req.ids.join(","))
             .execute('deleteLeaves');
 
-        console.log("result deleted ====> ", result);
-
         if (result)
             return result.recordset;
         else
             return null;
     } catch (error) {
         res.status(500);
-        console.log('error.message', error.message)
         return error.message;
     }
 }

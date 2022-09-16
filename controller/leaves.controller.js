@@ -21,7 +21,6 @@ const getLeaves = (req, res) => {
 }
 
 const getPaySlipDetails = (req, res) => {
-    console.log('req.body', req.body)
 
     return leavesService.getPaySlipDetails(req.body)
         .then(resData => {
@@ -40,8 +39,6 @@ const getPaySlipDetails = (req, res) => {
         })
 }
 const getLeavesById = (req, res) => {
-    console.log('req.body', req.body)
-
     return leavesService.getLeavesById(req.body)
         .then(resData => {
             res.status(200).json({
@@ -233,9 +230,6 @@ const getAllLeaves = (req, res) => {
 const getLeaveBalance = (req, res) => {
 
 
-    console.log("hello123")
-
-
     return leavesService.getLeaveBalance()
         .then(resData => {
             res.status(200).json({
@@ -253,9 +247,6 @@ const getLeaveBalance = (req, res) => {
         })
 }
 const getLeaveBalanceAction = (req, res) => {
-
-
-    console.log("hello123")
 
 
     return leavesService.getLeaveBalanceAction()

@@ -9,8 +9,6 @@ const payrollController = require('../controller/payroll.controller');
 
 const addPayroll = async (req, res) => {
 
-    console.log(req.name)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -68,9 +66,6 @@ const getPaySlipDetails = async (req, res) => {
             .input('aYear', req.year)
             .execute(`getPaySlipDetails`);
 
-        console.log(result.recordset[0])
-
-
         if (result)
             return result.recordset;
         else
@@ -101,8 +96,6 @@ const getPayrollById = async (req, res) => {
 const updatePayroll = async (req, res) => {
 
 
-    console.log('req', req)
-
     try {
         const pool = await poolPromise;
 
@@ -119,22 +112,16 @@ const updatePayroll = async (req, res) => {
             .input('netTotal', req.netTotal)
             .execute(`updatePayroll`);
 
-        console.log('result', result)
-
-
         if (result)
             return result.recordset;
         else
             return null;
     } catch (error) {
         res.status(500, error.message);
-        console.log(error.message)
         return error.message;
     }
 }
 const deletePayroll = async (req, res) => {
-
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;

@@ -10,8 +10,6 @@ const multerConfig = multer.diskStorage({
     },
     filename: async (req, file, callback) => {
 
-        console.log('file', file)
-
         const pool = await poolPromise;
         const result = await pool.request()
             .execute(`getUserMaxUserName`);
@@ -20,7 +18,6 @@ const multerConfig = multer.diskStorage({
         let newNum = parseInt(num) + 1;
         let newUserName = newNum <= 9 ? '000' + newNum : newNum <= 99 ? '00' + newNum : newNum <= 999 ? '0' + newNum : newNum;
 
-        console.log('result.recordset', result.recordset)
         const ext = file.mimetype.split('/')[1];
         data.imageName = 'U' + newUserName + '.' + ext;
         callback(null, `U${newUserName}.${ext}`)
@@ -28,9 +25,6 @@ const multerConfig = multer.diskStorage({
 })
 
 const isImage = (req, file, callback) => {
-
-    console.log('file', file)
-
 
     if (file.mimetype.startsWith('image')) {
         callback(null, true)

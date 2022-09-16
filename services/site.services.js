@@ -9,8 +9,6 @@ const siteController = require('../controller/site.controller');
 
 const addSite = async (req, res) => {
 
-    console.log(req.name)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -69,8 +67,6 @@ const getSite = async (req, res) => {
 
 const updateSite = async (req, res) => {
 
-    console.log(req)
-
     try {
         const pool = await poolPromise;
 
@@ -88,22 +84,16 @@ const updateSite = async (req, res) => {
             WHERE id=${parseInt(req.id)} AND isActive=1`
             );
 
-        console.log('result', result)
-
-
         if (result)
             return result.recordset;
         else
             return null;
     } catch (error) {
         res.status(500, error.message);
-        console.log(error.message)
         return error.message;
     }
 }
 const deleteSite = async (req, res) => {
-
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;
