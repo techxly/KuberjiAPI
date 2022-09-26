@@ -134,7 +134,7 @@ const getLeaveBalance = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .execute(`getLeaveBalance`);
+            .execute(`getLeaveBalanceWithMinus`);
 
         if (result)
             return result.recordsets;

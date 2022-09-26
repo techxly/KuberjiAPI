@@ -6,21 +6,41 @@ const {
 const data = { code: 1 };
 const multerConfig = multer.diskStorage({
     destination: (req, file, callback) => {
+
         callback(null, 'public/users')
     },
     filename: async (req, file, callback) => {
 
         const pool = await poolPromise;
-        const result = await pool.request()
-            .execute(`getUserMaxUserName`);
 
-        let num = result.recordset[0].userName.replace(/U/, '');
-        let newNum = parseInt(num) + 1;
-        let newUserName = newNum <= 9 ? '000' + newNum : newNum <= 99 ? '00' + newNum : newNum <= 999 ? '0' + newNum : newNum;
+        console.log('req.headers.isUpdate', req.headers.isupdate)
+        if (req.headers.isupdate == 'true') {
 
-        const ext = file.mimetype.split('/')[1];
-        data.imageName = 'U' + newUserName + '.' + ext;
-        callback(null, `U${newUserName}.${ext}`)
+            console.log('1', 1)
+            let imageName = req.headers.image.split('.')
+            console.log('imageName', imageName)
+            const ext = imageName[1];
+            data.imageName = imageName[0] + '.' + ext;
+            callback(null, `${imageName[0]}.${ext}`)
+
+        }
+        else {
+
+            console.log('2', 2)
+
+
+            const result = await pool.request()
+                .execute(`getUserMaxUserName`);
+
+            let num = result.recordset[0].userName.replace(/U/, '');
+            let newNum = parseInt(num) + 1;
+            let newUserName = 'U' + (newNum <= 9 ? '000' + newNum : newNum <= 99 ? '00' + newNum : newNum <= 999 ? '0' + newNum : newNum);
+            const ext = file.mimetype.split('/')[1];
+            data.imageName = 'U' + newUserName + '.' + ext;
+            callback(null, `U${newUserName}.${ext}`)
+        }
+
+        console.log('data', data)
     }
 })
 

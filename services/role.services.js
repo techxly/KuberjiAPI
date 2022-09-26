@@ -96,17 +96,17 @@ const updateRole = async (req, res) => {
         const pool = await poolPromise;
 
         // await pool.connect();
-         const table = new sql.Table('role_module');
-         table.columns.add('id', sql.Numeric(4, 0), { nullable: true });
-         table.columns.add('accessType', sql.Char(4), { nullable: true });
+        const table = new sql.Table('role_module');
+        table.columns.add('id', sql.Numeric(4, 0), { nullable: true });
+        table.columns.add('accessType', sql.Char(4), { nullable: true });
 
-         const rights = req.list;
-         rights.forEach(r => {
-             table.rows.add(
-                 r.id,
-                 r.accessType
-             )
-         });
+        const rights = req.list;
+        rights.forEach(r => {
+            table.rows.add(
+                r.id,
+                r.accessType
+            )
+        });
 
         const result = await pool.request()
             .input('role_modulee', table)
@@ -126,6 +126,8 @@ const updateRole = async (req, res) => {
 
 const getRights = async (req, res) => {
 
+
+    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()

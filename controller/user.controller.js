@@ -134,6 +134,24 @@ const getAllUsers = (req, res) => {
         })
 }
 
+const getMaxUserName = (req, res) => {
+    return userService.getMaxUserName()
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'maxUser': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 const getUserCount = (req, res) => {
     return userService.getUserCount()
         .then(resData => {
@@ -186,6 +204,23 @@ const verifyToken = (req, res) => {
             })
         })
 }
+const getRights = (req, res) => {
+    return userService.getRights(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'rights': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 module.exports = {
     login: login,
@@ -197,6 +232,8 @@ module.exports = {
     updateUser: updateUser,
     deleteUser: deleteUser,
     getUserById: getUserById,
-    getAllUsers: getAllUsers
+    getAllUsers: getAllUsers,
+    getMaxUserName: getMaxUserName,
+    getRights: getRights
 
 }

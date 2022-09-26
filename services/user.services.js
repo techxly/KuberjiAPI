@@ -53,6 +53,26 @@ const getUserCount = async (req, res) => {
     }
 }
 
+const getMaxUserName = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .execute(`getMaxUserName`);
+
+
+        console.log(' result.recordset[0]', result.recordset[0].userName)
+
+        if (result) {
+            return result.recordset[0].userName;
+        }
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
 const login = async (req, res) => {
 
     try {
@@ -127,6 +147,7 @@ const verifyToken = async (req, res) => {
 
 const addUser = async (req, res) => {
 
+    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -154,6 +175,9 @@ const addUser = async (req, res) => {
             .input('role', req.role)
             .input('site', req.site)
             .execute(`addUser`);
+
+
+        console.log('result', result.recordset)
 
         if (result) {
             result.recordset.forEach(element => {
@@ -222,13 +246,13 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
 
-
     try {
         const pool = await poolPromise;
         const result = await pool.request() //.query(`SELECT * from employee where isActive = 1`);
             .input('ids', req.ids.join(","))
             .execute('deleteUser');
 
+        console.log('result.recordset', result.recordset)
 
 
         if (result) {
@@ -336,6 +360,31 @@ const getUserById = async (req, res) => {
         return error.message;
     }
 }
+const getRights = async (req, res) => {
+
+
+    console.log('req', req)
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input(`role`, req.role)
+            .input(`moduleName`, req.module)
+            .execute(`getRightsByRole`)
+
+        console.log('result', result.recordset[0])
+
+
+        if (result) {
+            return result.recordset[0];
+        }
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
 const getUserProfile = async (req, res) => {
 
 
@@ -385,10 +434,12 @@ module.exports = {
     login: login,
     addUser: addUser,
     getUser: getUser,
+    getMaxUserName: getMaxUserName,
     getUserProfile: getUserProfile,
     updateUser: updateUser,
     deleteUser: deleteUser,
     getUserById: getUserById,
     getAllUsers: getAllUsers,
-    getUserCount: getUserCount
+    getUserCount: getUserCount,
+    getRights: getRights
 }

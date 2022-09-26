@@ -14,6 +14,8 @@ module.exports = app => {
     router.get('/allUsers', userController.getAllUsers);
     router.get('/getUserCount', userController.getUserCount);
     router.post('/userProfile', userController.getUserProfile);
+    router.get('/getMaxUserName', userController.getMaxUserName);
+    router.post('/getRights', userController.getRights);
 
     app.use('/api', router);
 }
