@@ -134,6 +134,26 @@ const getAllUsers = (req, res) => {
         })
 }
 
+const getUsersBySearch = (req, res) => {
+
+    console.log('req.body', req.body)
+    return userService.getUsersBySearch(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 const getMaxUserName = (req, res) => {
     return userService.getMaxUserName()
         .then(resData => {
@@ -176,7 +196,7 @@ const login = (req, res) => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'accessToken': resData
+                'data': resData
             })
         })
         .catch(error => {
@@ -204,8 +224,8 @@ const verifyToken = (req, res) => {
             })
         })
 }
-const getRights = (req, res) => {
-    return userService.getRights(req.body)
+const getRightsByRole = (req, res) => {
+    return userService.getRightsByRole(req.body)
         .then(resData => {
             res.status(200).json({
                 'success': true,
@@ -233,7 +253,8 @@ module.exports = {
     deleteUser: deleteUser,
     getUserById: getUserById,
     getAllUsers: getAllUsers,
+    getUsersBySearch: getUsersBySearch,
     getMaxUserName: getMaxUserName,
-    getRights: getRights
+    getRightsByRole: getRightsByRole
 
 }

@@ -124,15 +124,38 @@ const updateRole = async (req, res) => {
     }
 }
 
+const updateRoleStatus = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('typeId', req.typeId)
+            .input('status', req.typeStatus == true ? 1 : 0)
+            .execute(`updateRoleStatus`);
+
+        if (result)
+            return;
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
 const getRights = async (req, res) => {
 
 
-    console.log('req', req)
+    console.log('req===?', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.id)
             .execute(`getRights`);
+
+
+        console.log('result--->', result.recordset)
+
+
 
         if (result) {
             return result.recordset;
@@ -169,6 +192,7 @@ module.exports = {
     addRole: addRole,
     getRoles: getRoles,
     updateRole: updateRole,
+    updateRoleStatus: updateRoleStatus,
     deleteRole: deleteRole,
     getRights: getRights
 }

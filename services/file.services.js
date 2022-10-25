@@ -32,7 +32,7 @@ const multerConfig = multer.diskStorage({
             const result = await pool.request()
                 .execute(`getUserMaxUserName`);
 
-            let num = result.recordset[0].userName.replace(/U/, '');
+            let num = result.recordset[0].userName.replace(/U/g, '');
             let newNum = parseInt(num) + 1;
             let newUserName = 'U' + (newNum <= 9 ? '000' + newNum : newNum <= 99 ? '00' + newNum : newNum <= 999 ? '0' + newNum : newNum);
             const ext = file.mimetype.split('/')[1];

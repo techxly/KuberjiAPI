@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
+let fs = require('fs');
 require("dotenv").config();
 const {
     poolPromise
@@ -101,8 +102,8 @@ const getLeaveTypes = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .execute(`getLeaveTypes`);
-       //.execute(`getLeaveBalance_1`);
+            .execute(`getLeaveTypes`);
+        //.execute(`getLeaveBalance_1`);
 
         if (result)
             return result.recordset;
@@ -120,8 +121,29 @@ const getAllLeaves = async (req, res) => {
         const result = await pool.request()
             .execute(`getAllLeaves`);
 
-        if (result)
+        console.log('result.recordset', result.recordset)
+
+        if (result.recordset.length > 0) {
+
+
+            result.recordset.forEach(element => {
+
+
+
+                let ext = element.image.split('.');
+
+                const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
+
+                console.log('image', image)
+
+                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+            });
+
+
+            console.log('result.recordset', result.recordset)
+
             return result.recordset;
+        }
         else
             return null;
     } catch (error) {
@@ -151,7 +173,7 @@ const getLeaveBalanceAction = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .execute(`getLeaveBalanceAction`);
-
+            console.log('result.recordsets',result.recordsets)
         if (result)
             return result.recordsets;
         else
@@ -186,8 +208,27 @@ const getLeaves = async (req, res) => {
             .input('aMonth', req.month)
             .input('aYear', req.year)
             .execute(`getLeaves`);
-        if (result)
+        if (result.recordset.length > 0) {
+
+
+            result.recordset.forEach(element => {
+
+
+
+                let ext = element.image.split('.');
+                console.log('element', element.image)
+                const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
+
+                console.log('image', image)
+
+                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+            });
+
+
+            console.log('result.recordset', result.recordset)
+
             return result.recordset;
+        }
         else
             return null;
     } catch (error) {
@@ -224,8 +265,19 @@ const getLeavesById = async (req, res) => {
             .input('id', req.id)
             .execute(`getLeaveById`);
 
-        if (result)
+        if (result.recordset.length > 0) {
+
+            result.recordset.forEach(element => {
+
+                let ext = element.image.split('.');
+
+                const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
+
+                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+            });
+
             return result.recordset;
+        }
         else
             return null;
     } catch (error) {
