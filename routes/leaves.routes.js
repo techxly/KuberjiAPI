@@ -18,6 +18,8 @@ module.exports = app => {
     router.get('/getAllLeaves', leavesController.getAllLeaves);
     router.get('/leaveBalance', leavesController.getLeaveBalance);
     router.get('/leaveBalanceAction', leavesController.getLeaveBalanceAction);
+    router.post('/encashLeaves', leavesController.encashLeaves);
+    router.post('/applyLeave', leavesController.applyLeave);
 
     app.use('/api', router);
 }

@@ -89,8 +89,8 @@ const getPaySlipDetails = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('PayRollId', req.id)
-            .input('aMonth', req.month)
-            .input('aYear', req.year)
+            .input('pMonth', req.month)
+            .input('pYear', req.year)
             .execute(`getPaySlipDetails`);
 
         if (result)
@@ -120,8 +120,28 @@ const getPayrollById = async (req, res) => {
     }
 }
 
+const getPaySlipByEmpMonthYear = async (req, res) => {
+//console.log('req',req)
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('employeeId', req.id)
+            .input('pMonth', req.month)
+            .input('pYear', req.year)
+            .execute(`getPaySlipByEmpMonthYear`);
+        if (result)
+            return result.recordset;
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
 const updatePayroll = async (req, res) => {
 
+    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -175,5 +195,6 @@ module.exports = {
     getPayrollById: getPayrollById,
     getPaySlipDetails: getPaySlipDetails,
     updatePayroll: updatePayroll,
-    deletePayroll: deletePayroll
+    deletePayroll: deletePayroll,
+    getPaySlipByEmpMonthYear: getPaySlipByEmpMonthYear
 }

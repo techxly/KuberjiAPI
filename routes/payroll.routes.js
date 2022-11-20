@@ -10,6 +10,7 @@ module.exports = app => {
     router.post('/addPayroll', payrollController.addPayroll);
     router.post('/updatePayroll', payrollController.updatePayroll);
     router.post('/deletePayroll', payrollController.deletePayroll);
+    router.post('/getPaySlipByEmpMonthYear', payrollController.getPaySlipByEmpMonthYear);
 
     app.use('/api', router);
 }

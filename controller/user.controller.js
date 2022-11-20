@@ -207,6 +207,24 @@ const login = (req, res) => {
             })
         })
 }
+
+const otherLogin = (req, res) => {
+    return userService.otherLogin(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'data': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 const verifyToken = (req, res) => {
     return userService.verifyToken(req.body)
         .then(resData => {
@@ -244,6 +262,7 @@ const getRightsByRole = (req, res) => {
 
 module.exports = {
     login: login,
+    otherLogin: otherLogin,
     verifyToken: verifyToken,
     addUser: addUser,
     getUserCount: getUserCount,

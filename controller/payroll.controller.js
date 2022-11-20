@@ -38,6 +38,25 @@ const getPaySlipDetails = (req, res) => {
             })
         })
 }
+
+const getPaySlipByEmpMonthYear = (req, res) => {
+
+    return payrollService.getPaySlipByEmpMonthYear(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'paySlipData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 const getPayrollById = (req, res) => {
 
     return payrollService.getPayrollById(req.body)
@@ -124,5 +143,6 @@ module.exports = {
     getPaySlipDetails: getPaySlipDetails,
     getPayroll: getPayroll,
     updatePayroll: updatePayroll,
-    deletePayroll: deletePayroll
+    deletePayroll: deletePayroll,
+    getPaySlipByEmpMonthYear: getPaySlipByEmpMonthYear
 }

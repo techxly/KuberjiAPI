@@ -172,7 +172,7 @@ const login = async (req, res) => {
 
                 const pool = await poolPromise;
                 const result = await pool.request()
-                    .query(`SELECT e.id,e.userName, e.email, e.firstName+' '+e.lastName as fullName, r.role  from employee as e
+                    .query(`SELECT e.id,e.image,e.userName, e.email, e.isUserImageAdded, e.firstName+' '+e.lastName as fullName, r.role  from employee as e
                 INNER JOIN employee_role as er on er.employeeId = e.id
                 INNER JOIN role as r on r.Id = er.roleId
                 WHERE e.id = '${id}' 
@@ -182,6 +182,22 @@ const login = async (req, res) => {
                 `)
 
                 if (result) {
+
+
+                    result.recordset.forEach(element => {
+                        console.log('element', element)
+                        if (element.image != "") {
+                            let ext = element.image.split('.');
+                            const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                            element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        }
+                        else {
+                            element.image = defaultImage
+                        }
+
+                    });
+
+
                     result.recordset[0].token = token
                     return result.recordset[0];
                 }
@@ -197,6 +213,68 @@ const login = async (req, res) => {
             return null;
         }
     } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
+const otherLogin = async (req, res) => {
+
+    console.log('req...', req.accessToken)
+
+    try {
+
+        let jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+        const token = req.accessToken;
+        const verified = jwt.verify(token, jwtSecretKey);
+
+
+        console.log('verified', verified)
+
+
+        if (verified) {
+
+            const pool = await poolPromise;
+            const result = await pool.request()
+                .query(`SELECT e.id,e.userName, e.email,  e.image, e.isUserImageAdded, e.firstName+' '+e.lastName as fullName, r.role  from employee as e
+                INNER JOIN employee_role as er on er.employeeId = e.id
+                INNER JOIN role as r on r.Id = er.roleId
+                WHERE e.userName = '${req.userName}' 
+                AND e.isActive = 1
+                AND er.isActive = 1
+                AND r.isActive = 1
+                `)
+
+            if (result) {
+
+                result.recordset.forEach(element => {
+                    console.log('element', element)
+                    if (element.image != "") {
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.image = defaultImage
+                    }
+
+                });
+                return result.recordset[0];
+            }
+            else
+                return null;
+        }
+        else {
+            console.log("Invalid Token")
+
+            return null;
+        }
+
+    } catch (error) {
+
+        console.log('error', error)
+
         res.status(500);
         return error.message;
     }
@@ -316,7 +394,7 @@ const updateUser = async (req, res) => {
             .input('role', req.role)
             .execute('editUser');
 
-            console.log('result.recordset', result.recordset)
+        console.log('result.recordset', result.recordset)
 
         if (result.recordset.length > 0) {
 
@@ -332,7 +410,7 @@ const updateUser = async (req, res) => {
                 }
             });
 
-            
+
 
             return result.recordset;
         }
@@ -529,6 +607,7 @@ const getUserProfile = async (req, res) => {
 module.exports = {
     verifyToken: verifyToken,
     login: login,
+    otherLogin: otherLogin,
     addUser: addUser,
     getUser: getUser,
     getMaxUserName: getMaxUserName,

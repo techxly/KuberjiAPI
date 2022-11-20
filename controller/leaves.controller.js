@@ -208,6 +208,25 @@ const deleteLeaves = (req, res) => {
         })
 }
 
+const applyLeave = (req, res) => {
+
+    return leavesService.applyLeave(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'leavesData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 const getAllLeaves = (req, res) => {
 
     return leavesService.getAllLeaves()
@@ -246,10 +265,31 @@ const getLeaveBalance = (req, res) => {
             })
         })
 }
+
 const getLeaveBalanceAction = (req, res) => {
 
 
     return leavesService.getLeaveBalanceAction()
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'leaveBalance': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
+const encashLeaves = (req, res) => {
+    console.log('req.body', req.body)
+
+    return leavesService.encashLeaves(req.body)
         .then(resData => {
             res.status(200).json({
                 'success': true,
@@ -281,4 +321,6 @@ module.exports = {
     getAllLeaves: getAllLeaves,
     getLeaveBalance: getLeaveBalance,
     getLeaveBalanceAction: getLeaveBalanceAction,
+    encashLeaves: encashLeaves,
+    applyLeave: applyLeave
 }

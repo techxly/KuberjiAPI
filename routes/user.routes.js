@@ -5,6 +5,7 @@ module.exports = app => {
 
 
     router.post('/login', userController.login);
+    router.post('/otherLogin', userController.otherLogin);
     router.post('/verifyToken', userController.verifyToken);
     router.post('/getUser', userController.getUser);
     router.post('/getUserById', userController.getUserById);
