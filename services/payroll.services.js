@@ -59,19 +59,16 @@ const getPayroll = async (req, res) => {
 
             result.recordset.forEach(element => {
 
-                if (element.image != null) {
+                if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
                     let ext = element.image.split('.');
                     console.log('element', element.image)
-                    const image = fs.readFileSync(`public/users/${element.image}`, 'base64');
-                    element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
                 }
                 else {
-                    element.img = defaultImage
+                    element.image = defaultImage
                 }
             });
-
-
-            console.log('result.recordset', result.recordset)
 
             return result.recordset;
         }
@@ -84,15 +81,33 @@ const getPayroll = async (req, res) => {
 }
 
 const getPaySlipDetails = async (req, res) => {
-
+    console.log('req',req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .input('PayRollId', req.id)
+            .input('payrollId', parseInt(req.id))
             .input('pMonth', req.month)
             .input('pYear', req.year)
             .execute(`getPaySlipDetails`);
+        if (result)
+            return result.recordset;
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
 
+const getPaySlipByEmpMonthYear = async (req, res) => {
+    //console.log('req',req)
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('employeeId', req.id)
+            .input('pMonth', req.month)
+            .input('pYear', req.year)
+            .execute(`getPaySlipByEmpMonthYear`);
         if (result)
             return result.recordset;
         else
@@ -108,27 +123,10 @@ const getPayrollById = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .input('PayRollId', req.id)
-            .execute(`getPayrollById`);
-        if (result)
-            return result.recordset;
-        else
-            return null;
-    } catch (error) {
-        res.status(500);
-        return error.message;
-    }
-}
-
-const getPaySlipByEmpMonthYear = async (req, res) => {
-//console.log('req',req)
-    try {
-        const pool = await poolPromise;
-        const result = await pool.request()
-            .input('employeeId', req.id)
+            .input('payrollId', req.id)
             .input('pMonth', req.month)
             .input('pYear', req.year)
-            .execute(`getPaySlipByEmpMonthYear`);
+            .execute(`getPayrollById`);
         if (result)
             return result.recordset;
         else
@@ -168,6 +166,7 @@ const updatePayroll = async (req, res) => {
         return error.message;
     }
 }
+
 const deletePayroll = async (req, res) => {
 
     try {

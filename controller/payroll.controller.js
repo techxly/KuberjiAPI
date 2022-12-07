@@ -22,6 +22,8 @@ const getPayroll = (req, res) => {
 
 const getPaySlipDetails = (req, res) => {
 
+    console.log("getPaySlipDetails")
+
     return payrollService.getPaySlipDetails(req.body)
         .then(resData => {
             res.status(200).json({
@@ -38,8 +40,9 @@ const getPaySlipDetails = (req, res) => {
             })
         })
 }
-
 const getPaySlipByEmpMonthYear = (req, res) => {
+
+    console.log("getPaySlipByEmpMonthYear")
 
     return payrollService.getPaySlipByEmpMonthYear(req.body)
         .then(resData => {

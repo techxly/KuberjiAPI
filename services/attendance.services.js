@@ -75,14 +75,14 @@ const uploadUserImage = async (req, res) => {
     try {
         //upload logic
 
-        var base64Data = req.image64.replace(/^data:image\/jpg;base64,/, "");
+        var base64Data = req.image64.replace(/^data:image\/png;base64,/, "");
 
         let uploaded = true;
 
-        require("fs").writeFile(`public/userImages/${req.userName}.jpg`, base64Data, 'base64', function (err) {
+        require("fs").writeFile(`public/userImages/${req.userName}.png`, base64Data, 'base64', function (err) {
             if (err)
                 uploaded = false
-            else if (!require("fs").existsSync(`public/userImages/${req.userName}.jpg`))
+            else if (!require("fs").existsSync(`public/userImages/${req.userName}.png`))
                 uploaded = false
 
         });

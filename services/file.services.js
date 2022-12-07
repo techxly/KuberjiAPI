@@ -7,7 +7,7 @@ const data = { code: 1 };
 const multerConfig = multer.diskStorage({
     destination: (req, file, callback) => {
 
-        callback(null, 'public/users')
+        callback(null, 'public/userImages')
     },
     filename: async (req, file, callback) => {
 
