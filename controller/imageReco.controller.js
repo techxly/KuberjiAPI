@@ -1,11 +1,16 @@
-const faceRecoServices = require('../services/imageReco.services');
+//const faceRecoServices = require('../services/imageReco.services');
+const faceRecoServices = require('../services/imageMatching.services');
+
+
 
 exports.faceReco = (req, res) => {
     return faceRecoServices.faceReco(req.body)
         .then(resData => {
+
+            console.log('resData', resData)
             res.status(200).json({
                 'success': true,
-                'code': 200,
+                'code': resData ? 200 : 500,
                 'faceData': resData
             })
         })

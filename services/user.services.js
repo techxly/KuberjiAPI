@@ -11,8 +11,6 @@ const {
     poolPromise
 } = require('../connections/mssql-db')
 
-
-
 const getAllUsers = async (req, res) => {
     try {
         const pool = await poolPromise;
@@ -181,6 +179,10 @@ const login = async (req, res) => {
                 AND r.isActive = 1
                 `)
 
+
+                console.log('result.recordset', result.recordset)
+
+
                 if (result) {
 
 
@@ -196,6 +198,10 @@ const login = async (req, res) => {
                         }
 
                     });
+
+
+                    console.log('result.recordset[0]', result.recordset[0])
+                    console.log('token', token)
 
 
                     result.recordset[0].token = token
@@ -335,12 +341,13 @@ const addUser = async (req, res) => {
             .input('email', req.email)
             .input('bloodGroup', req.bloodGroup)
             .input('salary', req.salary)
+            .input('designation', req.designation)
             .input('address', req.address)
             .input('city', req.city)
             .input('state', req.state)
             .input('zipCode', req.zipcode)
             .input('emergencyNumber', req.altMobile)
-            .input('isActive', 1)
+            .input('isActive', (req.isActive == '0' ? false : true))
             .input('role', req.role)
             .input('site', req.site)
             .input('casualLeave', parseInt(req.casualLeave))
@@ -348,7 +355,12 @@ const addUser = async (req, res) => {
             .input('nonPaidLeave', parseInt(req.nonPaidLeave))
             .execute(`addUser`);
 
+        console.log('result', result)
+
         if (result) {
+
+            console.log('result.recordset', result.recordset)
+
             result.recordset.forEach(element => {
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
                     let ext = element.image.split('.');
@@ -383,6 +395,7 @@ const updateUser = async (req, res) => {
             .input('dob', req.birthDate)
             .input('email', req.email)
             .input('bloodGroup', req.bloodGroup)
+            .input('designation', req.designation)
             .input('salary', req.salary)
             .input('address', req.address)
             .input('city', req.city)
@@ -392,6 +405,7 @@ const updateUser = async (req, res) => {
             .input('userId', req.userId)
             .input('site', req.site)
             .input('role', req.role)
+            .input('isActive', (req.isActive == '0' ? false : true))
             .execute('editUser');
 
         console.log('result.recordset', result.recordset)
@@ -452,8 +466,6 @@ const deleteUser = async (req, res) => {
         return error.message;
     }
 }
-
-
 
 const getUser = async (req, res) => {
     try {

@@ -130,7 +130,7 @@ const getAllLeaves = async (req, res) => {
 
         if (result.recordset.length > 0) {
             result.recordset.forEach(element => {
-                
+
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
                     let ext = element.image.split('.');
                     const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
@@ -297,6 +297,7 @@ const updateLeaves = async (req, res) => {
 
         const result = await pool.request()
             .input('id', req.id)
+            .input('cancelReason', req.cancelReason)
             .input('leaveFrom', req.leaveFrom)
             .input('leaveType', req.leaveType)
             .input('leaveTo', req.leaveTo)

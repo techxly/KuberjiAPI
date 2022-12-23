@@ -76,8 +76,32 @@ const uploadUserImage = (req, res) => {
             })
         })
 }
+const addAttendance = (req, res) => {
+
+    console.log('req', req)
+
+    return attendanceService.addAttendance(req.body)
+        .then(resData => {
+
+            console.log('resData', resData)
+
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 module.exports = {
+    addAttendance: addAttendance,
     getAttendanceByDate: getAttendanceByDate,
     getTodaysAttendance: getTodaysAttendance,
     getAttendanceSheetData: getAttendanceSheetData,

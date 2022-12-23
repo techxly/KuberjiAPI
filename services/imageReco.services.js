@@ -89,7 +89,7 @@ function loadLabeledImages(labels) {
             const userStoredImage = new Image();
             userStoredImage.src = `./public/userImages/${label}`
 
-            const detections = await faceapi.detectSingleFace(userStoredImage).withFaceLandmarks().withFaceDescriptor();
+            const detections = await faceapi.detectSingleFace(userStoredImage).withFaceDescriptor();
 
             descriptions.push(detections.descriptor)
 

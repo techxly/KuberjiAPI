@@ -19,6 +19,8 @@ const addSite = async (req, res) => {
             ,city
             ,state
             ,zipCode
+            ,lat
+            ,lon
             ,address)
         VALUES
             ('${req.unit}'
@@ -27,6 +29,8 @@ const addSite = async (req, res) => {
             ,'${req.city}'
             ,'${req.state}'
             ,${parseInt(req.zipcode)}
+            ,${req.lat}
+            ,${req.lon}
             ,'${req.address}')`
             );
         if (result)
@@ -79,6 +83,8 @@ const updateSite = async (req, res) => {
                 ,radius=${parseInt(req.radius)}
                 ,city='${req.city}'
                 ,state='${req.state}'
+                ,lat='${req.lat}'
+                ,lon='${req.lon}'
                 ,zipCode=${parseInt(req.zipcode)}
                 ,address='${req.address}' 
             WHERE id=${parseInt(req.id)} AND isActive=1`
