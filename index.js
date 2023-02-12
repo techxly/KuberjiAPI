@@ -37,6 +37,7 @@ require("./routes/module.routes")(app);
 require("./routes/file.routes")(app);
 require("./routes/imageReco.routes")(app);
 require("./routes/attendance.routes")(app);
+require("./routes/misc.routes")(app);
 
 const PORT = process.env.PORT || 5000;
 

@@ -37,6 +37,24 @@ const getTodaysAttendance = (req, res) => {
             })
         })
 }
+const getAttendanceByUser = (req, res) => {
+
+    return attendanceService.getAttendanceByUser(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'attendanceData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 const getAttendanceSheetData = (req, res) => {
 
     return attendanceService.getAttendanceSheetData(req.body)
@@ -104,6 +122,7 @@ module.exports = {
     addAttendance: addAttendance,
     getAttendanceByDate: getAttendanceByDate,
     getTodaysAttendance: getTodaysAttendance,
+    getAttendanceByUser: getAttendanceByUser,
     getAttendanceSheetData: getAttendanceSheetData,
     uploadUserImage: uploadUserImage,
 }

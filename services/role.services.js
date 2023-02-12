@@ -92,10 +92,11 @@ const getRoles = async (req, res) => {
 
 const updateRole = async (req, res) => {
 
+    console.log('req', req)
+
     try {
         const pool = await poolPromise;
 
-        // await pool.connect();
         const table = new sql.Table('role_module');
         table.columns.add('id', sql.Numeric(4, 0), { nullable: true });
         table.columns.add('accessType', sql.Char(4), { nullable: true });
@@ -108,18 +109,28 @@ const updateRole = async (req, res) => {
             )
         });
 
+        console.log('JSON.stringify(req.list)', JSON.stringify(req.list))
         const result = await pool.request()
-            .input('role_modulee', table)
+            //.input('role_module', sql.TYPES.TVP, table)
+            .input('role_module', JSON.stringify(req.list))
             .input('id', parseInt(req.id))
             .input('role', req.name)
             .input('description', req.description)
             .execute(`updateRole`);
 
 
-        return result.recordset;
+        console.log('result', result)
+
+        if (result) {
+            return result.recordset;
+        }
+        else {
+            return null;
+        }
 
     } catch (error) {
         res.status(500);
+        console.log('error.message', error)
         return error.message;
     }
 }

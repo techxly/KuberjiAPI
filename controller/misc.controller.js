@@ -1,32 +1,19 @@
+const miscService = require('../services/misc.services');
 
 
-const siteService = require('../services/site.services');
+const sendResetLink = (req, res) => {
 
+    const mailOptions = {
+        emailTo: req.body.emailId,
+        subject: "Shriji Kuberji- Password Reset Link",
+        html: `Click <a href='http://localhost:3000/resetPassword?t=##token##' >here</a> to reset the password: <b>Hello</b>`
+    }
 
-const getSite = (req, res) => {
-
-    return siteService.getSite()
+    return miscService.sendResetLink(mailOptions)
         .then(resData => {
-            res.status(200).json({
-                'success': true,
-                'code': 200,
-                'siteData': resData
-            })
-        })
-        .catch(error => {
-            res.status(200).json({
-                'success': true,
-                'code': 500,
-                'data': error
-            })
-        })
-}
 
+            console.log('resData______', resData)
 
-const addSite = (req, res) => {
-
-    return siteService.addSite(req.body)
-        .then(resData => {
             res.status(200).json({
                 'success': true,
                 'code': 200,
@@ -42,15 +29,17 @@ const addSite = (req, res) => {
         })
 }
 
+const checkNotifications = (req, res) => {
 
-const updateSite = (req, res) => {
-
-    return siteService.updateSite(req.body)
+    return miscService.checkNotifications(req.body)
         .then(resData => {
+
+            console.log('resData______', resData)
+
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'data': resData
+                'notifications': resData
             })
         })
         .catch(error => {
@@ -62,14 +51,17 @@ const updateSite = (req, res) => {
         })
 }
 
-const deleteSite = (req, res) => {
+const addNotifications = (req, res) => {
 
-    return siteService.deleteSite(req.body)
+    return miscService.addNotifications(req.body)
         .then(resData => {
+
+            console.log('resData______', resData)
+
             res.status(200).json({
                 'success': true,
                 'code': 200,
-                'data': resData
+                'notifications': resData
             })
         })
         .catch(error => {
@@ -81,11 +73,29 @@ const deleteSite = (req, res) => {
         })
 }
 
+const markAsRead = (req, res) => {
 
+    return miscService.markAsRead(req.body)
+        .then(resData => {
+
+            res.status(200).json({
+                'success': true,
+                'code': 200
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 module.exports = {
-    addSite: addSite,
-    getSite: getSite,
-    updateSite: updateSite,
-    deleteSite: deleteSite
+    sendResetLink: sendResetLink,
+    checkNotifications: checkNotifications,
+    addNotifications: addNotifications,
+    markAsRead: markAsRead
 }
+

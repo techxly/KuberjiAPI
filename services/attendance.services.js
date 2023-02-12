@@ -43,6 +43,31 @@ const getTodaysAttendance = async (req, res) => {
         return error.message;
     }
 }
+
+const getAttendanceByUser = async (req, res) => {
+
+    console.log('req-----###', req)
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('userId', req.userId)
+            .input('month', req.month)
+            .input('year', req.year)
+            .execute(`getAttendanceByUser`);
+
+
+        console.log('result', result)
+
+        if (result)
+            return result.recordset;
+        else
+            return [];
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
 const getAttendanceSheetData = async (req, res) => {
 
 
@@ -52,9 +77,10 @@ const getAttendanceSheetData = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('attDate', req.date)
-            .execute(`getAttendanceSheetData`);
+            .execute('getAttendanceSheetData');
+        //.execute(`getAttendanceSheetData`);
 
-        console.log('result', result)
+        console.log('result', result.recordset)
         if (result)
             return result.recordset;
         else
@@ -88,7 +114,7 @@ const uploadUserImage = async (req, res) => {
             const pool = await poolPromise;
             const result = await pool.request()
                 .input('id', req.id)
-                .input('image', req.userName + ".jpg")
+                .input('image', req.userName + ".png")
                 .execute(`updateUserImage`);
         }
 
@@ -134,6 +160,7 @@ module.exports = {
     addAttendance: addAttendance,
     getAttendanceByDate: getAttendanceByDate,
     getTodaysAttendance: getTodaysAttendance,
+    getAttendanceByUser: getAttendanceByUser,
     getAttendanceSheetData: getAttendanceSheetData,
     uploadUserImage: uploadUserImage,
 }

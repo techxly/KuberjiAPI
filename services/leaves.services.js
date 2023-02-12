@@ -144,7 +144,7 @@ const getAllLeaves = async (req, res) => {
             return result.recordset;
         }
         else
-            return null;
+            return [];
     } catch (error) {
         res.status(500);
         return error.message;

@@ -13,11 +13,14 @@ module.exports = app => {
     router.post('/updateUser', userController.updateUser);
     router.post('/deleteUser', userController.deleteUser);
     router.get('/allUsers', userController.getAllUsers);
+    router.get('/getAllUsersBasics', userController.getAllUsersBasics);
     router.post('/getUsersBySearch', userController.getUsersBySearch);
     router.get('/getUserCount', userController.getUserCount);
     router.post('/userProfile', userController.getUserProfile);
     router.get('/getMaxUserName', userController.getMaxUserName);
     router.post('/getRightsByRole', userController.getRightsByRole);
+    router.post('/resetPassword', userController.resetPassword);
+    router.post('/getRightsByUser', userController.getRightsByUser);
 
     app.use('/api', router);
 }

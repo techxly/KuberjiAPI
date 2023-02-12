@@ -79,6 +79,25 @@ const deleteUser = (req, res) => {
         })
 }
 
+const getRightsByUser = (req, res) => {
+
+    return userService.getRightsByUser(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'rightsData': resData
+            })
+        })
+        .catch(error => {
+            res.status(500).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 const getUserById = (req, res) => {
 
     return userService.getUserById(req.body)
@@ -118,6 +137,24 @@ const getUserProfile = (req, res) => {
 
 const getAllUsers = (req, res) => {
     return userService.getAllUsers()
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
+const getAllUsersBasics = (req, res) => {
+    return userService.getAllUsersBasics()
         .then(resData => {
             res.status(200).json({
                 'success': true,
@@ -259,6 +296,23 @@ const getRightsByRole = (req, res) => {
             })
         })
 }
+const resetPassword = (req, res) => {
+    return userService.resetPassword(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'updated': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 module.exports = {
     login: login,
@@ -272,8 +326,11 @@ module.exports = {
     deleteUser: deleteUser,
     getUserById: getUserById,
     getAllUsers: getAllUsers,
+    getAllUsersBasics: getAllUsersBasics,
     getUsersBySearch: getUsersBySearch,
     getMaxUserName: getMaxUserName,
-    getRightsByRole: getRightsByRole
+    getRightsByRole: getRightsByRole,
+    resetPassword: resetPassword,
+    getRightsByUser: getRightsByUser,
 
 }
