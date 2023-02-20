@@ -22,7 +22,7 @@ const getPayroll = (req, res) => {
 
 const getPaySlipDetails = (req, res) => {
 
-    console.log("getPaySlipDetails")
+    //console.log("getPaySlipDetails")
 
     return payrollService.getPaySlipDetails(req.body)
         .then(resData => {
@@ -42,7 +42,7 @@ const getPaySlipDetails = (req, res) => {
 }
 const getPaySlipByEmpMonthYear = (req, res) => {
 
-    console.log("getPaySlipByEmpMonthYear")
+    //console.log("getPaySlipByEmpMonthYear")
 
     return payrollService.getPaySlipByEmpMonthYear(req.body)
         .then(resData => {

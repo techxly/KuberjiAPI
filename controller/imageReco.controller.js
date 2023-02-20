@@ -7,7 +7,7 @@ exports.faceReco = (req, res) => {
     return faceRecoServices.faceReco(req.body)
         .then(resData => {
 
-            console.log('resData', resData)
+            //console.log('resData', resData)
             res.status(200).json({
                 'success': true,
                 'code': resData ? 200 : 500,

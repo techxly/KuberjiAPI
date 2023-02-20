@@ -61,7 +61,7 @@ const getPayroll = async (req, res) => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
                     let ext = element.image.split('.');
-                    console.log('element', element.image)
+                    //console.log('element', element.image)
                     const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
                     element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
                 }
@@ -81,7 +81,7 @@ const getPayroll = async (req, res) => {
 }
 
 const getPaySlipDetails = async (req, res) => {
-    console.log('req',req)
+    //console.log('req',req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -100,7 +100,7 @@ const getPaySlipDetails = async (req, res) => {
 }
 
 const getPaySlipByEmpMonthYear = async (req, res) => {
-    //console.log('req',req)
+    ////console.log('req',req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -139,7 +139,7 @@ const getPayrollById = async (req, res) => {
 
 const updatePayroll = async (req, res) => {
 
-    console.log('req', req)
+    //console.log('req', req)
 
     try {
         const pool = await poolPromise;

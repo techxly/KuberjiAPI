@@ -18,7 +18,7 @@ const userIncomingImage = new Image();
 const faceReco = async (req, res) => {
 
     userId = req.id;
-    console.log('userId', userId)
+    //console.log('userId', userId)
     try {
 
         const MODEL_URL = './public/models'; // set .env path in future
@@ -37,7 +37,7 @@ const faceReco = async (req, res) => {
 
 
         let files = await fs.readdir("./public/userImages/");
-        console.log('files', files)
+        //console.log('files', files)
         //Promise.all([
         const labeledFaceDescriptors = await loadLabeledImages(files);
         const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
@@ -45,7 +45,7 @@ const faceReco = async (req, res) => {
         if(detections){
             const result = await faceMatcher.findBestMatch(detections.descriptor);
         //]).then(() => {
-        console.log('result', result);
+        //console.log('result', result);
         return (result._label);
         }
         else{

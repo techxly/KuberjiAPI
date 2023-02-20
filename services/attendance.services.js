@@ -32,6 +32,7 @@ const getTodaysAttendance = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('attDate', moment().format('YYYY/MM/DD'))
+            .input('siteId', req.siteId)
             .execute(`getTodaysAttendance`);
 
         if (result)
@@ -46,7 +47,7 @@ const getTodaysAttendance = async (req, res) => {
 
 const getAttendanceByUser = async (req, res) => {
 
-    console.log('req-----###', req)
+    //console.log('req-----###', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -56,7 +57,7 @@ const getAttendanceByUser = async (req, res) => {
             .execute(`getAttendanceByUser`);
 
 
-        console.log('result', result)
+        //console.log('result', result)
 
         if (result)
             return result.recordset;
@@ -71,12 +72,13 @@ const getAttendanceByUser = async (req, res) => {
 const getAttendanceSheetData = async (req, res) => {
 
 
-    console.log('req', req.date)
+    console.log('req', req)
 
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('attDate', req.date)
+            .input('siteId', req.siteId)
             .execute('getAttendanceSheetData');
         //.execute(`getAttendanceSheetData`);
 
@@ -132,7 +134,7 @@ const addAttendance = async (req, res) => {
     try {
         //upload logic
 
-        console.log('req', req)
+        //console.log('req', req)
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.employeeId)

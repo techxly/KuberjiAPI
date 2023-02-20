@@ -21,6 +21,7 @@ module.exports = app => {
     router.post('/getRightsByRole', userController.getRightsByRole);
     router.post('/resetPassword', userController.resetPassword);
     router.post('/getRightsByUser', userController.getRightsByUser);
+    router.post('/getUsersBySite', userController.getUsersBySite);
 
     app.use('/api', router);
 }

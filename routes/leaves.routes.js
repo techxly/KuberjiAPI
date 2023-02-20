@@ -15,9 +15,9 @@ module.exports = app => {
     router.post('/addLeaves', leavesController.addLeaves);
     router.post('/updateLeaves', leavesController.updateLeaves);
     router.post('/deleteLeaves', leavesController.deleteLeaves);
-    router.get('/getAllLeaves', leavesController.getAllLeaves);
-    router.get('/leaveBalance', leavesController.getLeaveBalance);
-    router.get('/leaveBalanceAction', leavesController.getLeaveBalanceAction);
+    router.post('/getAllLeaves', leavesController.getAllLeaves);
+    router.post('/leaveBalance', leavesController.getLeaveBalance);
+    router.post('/leaveBalanceAction', leavesController.getLeaveBalanceAction);
     router.post('/encashLeaves', leavesController.encashLeaves);
     router.post('/applyLeave', leavesController.applyLeave);
 

@@ -173,7 +173,7 @@ const getAllUsersBasics = (req, res) => {
 
 const getUsersBySearch = (req, res) => {
 
-    console.log('req.body', req.body)
+    //console.log('req.body', req.body)
     return userService.getUsersBySearch(req.body)
         .then(resData => {
             res.status(200).json({
@@ -313,6 +313,23 @@ const resetPassword = (req, res) => {
             })
         })
 }
+const getUsersBySite = (req, res) => {
+    return userService.getUsersBySite(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'userData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 module.exports = {
     login: login,
@@ -332,5 +349,5 @@ module.exports = {
     getRightsByRole: getRightsByRole,
     resetPassword: resetPassword,
     getRightsByUser: getRightsByUser,
-
+    getUsersBySite: getUsersBySite
 }

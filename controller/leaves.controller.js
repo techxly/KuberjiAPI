@@ -229,7 +229,7 @@ const applyLeave = (req, res) => {
 
 const getAllLeaves = (req, res) => {
 
-    return leavesService.getAllLeaves()
+    return leavesService.getAllLeaves(req.body)
         .then(resData => {
             res.status(200).json({
                 'success': true,
@@ -249,7 +249,7 @@ const getAllLeaves = (req, res) => {
 const getLeaveBalance = (req, res) => {
 
 
-    return leavesService.getLeaveBalance()
+    return leavesService.getLeaveBalance(req.body)
         .then(resData => {
             res.status(200).json({
                 'success': true,
@@ -269,7 +269,7 @@ const getLeaveBalance = (req, res) => {
 const getLeaveBalanceAction = (req, res) => {
 
 
-    return leavesService.getLeaveBalanceAction()
+    return leavesService.getLeaveBalanceAction(req.body)
         .then(resData => {
             res.status(200).json({
                 'success': true,
@@ -287,7 +287,7 @@ const getLeaveBalanceAction = (req, res) => {
 }
 
 const encashLeaves = (req, res) => {
-    console.log('req.body', req.body)
+    //console.log('req.body', req.body)
 
     return leavesService.encashLeaves(req.body)
         .then(resData => {

@@ -64,7 +64,7 @@ const matchFaces = async (img) => {
         const detections = await faceapi.detectSingleFace(userIncomingImage).withFaceLandmarks().withFaceDescriptor();
 
         const result = faceMatcher.findBestMatch(detections.descriptor)
-        console.log('results', result.toString())
+        //console.log('results', result.toString())
     })
 
 };

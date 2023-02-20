@@ -21,7 +21,7 @@ const sendResetLink = async (data) => {
             .input('email', data.emailTo)
             .execute('getUserByEmail')
 
-        console.log('result', result.recordset[0])
+        //console.log('result', result.recordset[0])
 
         if (result && result.recordset[0]) {
 
@@ -96,18 +96,22 @@ const addNotifications = async (req) => {
             .execute(`addNotifications`);
 
         if (result) {
+            if (req.type == 1) {
+                result.recordset.forEach(element => {
+                    if (element.image) {
+                        if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
+                            let ext = element.image.split('.');
+                            const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
 
-            result.recordset.forEach(element => {
-                if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
-                } else {
-                    element.image = defaultImage
-                }
-            });
-            return result.recordset;
+                            element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        } else {
+                            element.image = defaultImage
+                        }
+                    }
+                });
+                return result.recordset || result;
+            }
+            return result
         }
         else
             return null;
@@ -120,7 +124,7 @@ const addNotifications = async (req) => {
 
 const checkNotifications = async (req) => {
 
-    console.log('req', req)
+    //console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -152,7 +156,7 @@ const checkNotifications = async (req) => {
 
 const markAsRead = async (req) => {
 
-    console.log('req', req)
+    //console.log('req', req)
 
     try {
         const pool = await poolPromise;

@@ -12,7 +12,7 @@ const sendResetLink = (req, res) => {
     return miscService.sendResetLink(mailOptions)
         .then(resData => {
 
-            console.log('resData______', resData)
+            //console.log('resData______', resData)
 
             res.status(200).json({
                 'success': true,
@@ -34,7 +34,7 @@ const checkNotifications = (req, res) => {
     return miscService.checkNotifications(req.body)
         .then(resData => {
 
-            console.log('resData______', resData)
+            //console.log('resData______', resData)
 
             res.status(200).json({
                 'success': true,
@@ -56,7 +56,7 @@ const addNotifications = (req, res) => {
     return miscService.addNotifications(req.body)
         .then(resData => {
 
-            console.log('resData______', resData)
+            //console.log('resData______', resData)
 
             res.status(200).json({
                 'success': true,

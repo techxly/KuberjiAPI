@@ -7,18 +7,25 @@ const roleController = require('../controller/site.controller');
 
 const addRole = async (req, res) => {
 
+    console.log('req', req)
+
     try {
         const pool = await poolPromise;
 
         const result = await pool.request()
             .query(`INSERT INTO role
-            (role
+            (role,level
             ,description,isActive)
         VALUES
-            ('${req.name}'
+            ('${req.name}',
+            '${parseInt(req.level)}'
             ,'${req.desc}',
-            ${1});`
+            ${1})`
             );
+
+
+        console.log('result', result)
+
 
         const maxId = await pool.request()
             .query(`SELECT MAX(id) as maxId FROM role;`
@@ -76,7 +83,7 @@ const getRoles = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .query(`SELECT * FROM role WHERE isActive=1`);
+            .query(`SELECT * FROM role WHERE isActive=1 AND level > 0`);
         if (result) {
 
             return result.recordset;
@@ -92,7 +99,7 @@ const getRoles = async (req, res) => {
 
 const updateRole = async (req, res) => {
 
-    console.log('req', req)
+    //console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -109,17 +116,18 @@ const updateRole = async (req, res) => {
             )
         });
 
-        console.log('JSON.stringify(req.list)', JSON.stringify(req.list))
+        //console.log('JSON.stringify(req.list)', JSON.stringify(req.list))
         const result = await pool.request()
             //.input('role_module', sql.TYPES.TVP, table)
             .input('role_module', JSON.stringify(req.list))
             .input('id', parseInt(req.id))
             .input('role', req.name)
+            .input('level', req.level)
             .input('description', req.description)
             .execute(`updateRole`);
 
 
-        console.log('result', result)
+        //console.log('result', result)
 
         if (result) {
             return result.recordset;
@@ -156,7 +164,7 @@ const updateRoleStatus = async (req, res) => {
 const getRights = async (req, res) => {
 
 
-    console.log('req===?', req)
+    //console.log('req===?', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -164,7 +172,7 @@ const getRights = async (req, res) => {
             .execute(`getRights`);
 
 
-        console.log('result--->', result.recordset)
+        //console.log('result--->', result.recordset)
 
 
 

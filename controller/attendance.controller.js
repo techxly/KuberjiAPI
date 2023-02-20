@@ -78,7 +78,7 @@ const uploadUserImage = (req, res) => {
     return attendanceService.uploadUserImage(req.body)
         .then(resData => {
 
-            console.log('resData', resData)
+            //console.log('resData', resData)
 
             res.status(200).json({
                 'success': true,
@@ -96,12 +96,12 @@ const uploadUserImage = (req, res) => {
 }
 const addAttendance = (req, res) => {
 
-    console.log('req', req)
+    //console.log('req', req)
 
     return attendanceService.addAttendance(req.body)
         .then(resData => {
 
-            console.log('resData', resData)
+            //console.log('resData', resData)
 
             res.status(200).json({
                 'success': true,

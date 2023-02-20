@@ -13,12 +13,12 @@ const multerConfig = multer.diskStorage({
 
         const pool = await poolPromise;
 
-        console.log('req.headers.isUpdate', req.headers.isupdate)
+        //console.log('req.headers.isUpdate', req.headers.isupdate)
         if (req.headers.isupdate == 'true') {
 
-            console.log('1', 1)
+            //console.log('1', 1)
             let imageName = req.headers.image.split('.')
-            console.log('imageName', imageName)
+            //console.log('imageName', imageName)
             const ext = imageName[1];
             data.imageName = imageName[0] + '.' + ext;
             callback(null, `${imageName[0]}.${ext}`)
@@ -26,7 +26,7 @@ const multerConfig = multer.diskStorage({
         }
         else {
 
-            console.log('2', 2)
+            //console.log('2', 2)
 
 
             const result = await pool.request()
@@ -40,7 +40,7 @@ const multerConfig = multer.diskStorage({
             callback(null, `U${newUserName}.${ext}`)
         }
 
-        console.log('data', data)
+        //console.log('data', data)
     }
 })
 

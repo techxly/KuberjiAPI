@@ -123,10 +123,15 @@ const getLeaveTypes = async (req, res) => {
 
 const getAllLeaves = async (req, res) => {
     try {
+
+        console.log('req', req)
+
         const pool = await poolPromise;
         const result = await pool.request()
+            .input('siteId', req.siteId)
             .execute(`getAllLeaves`);
 
+        console.log('result', result)
 
         if (result.recordset.length > 0) {
             result.recordset.forEach(element => {
@@ -155,8 +160,9 @@ const getLeaveBalance = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
+            .input('siteId', req.siteId)
             .execute(`getLeaveBalance`);
-        console.log('result.recordsets', result.recordsets)
+        //console.log('result.recordsets', result.recordsets)
         if (result)
             return result.recordset;
         else
@@ -171,6 +177,7 @@ const getLeaveBalanceAction = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
+            .input('siteId', req.siteId)
             .execute(`getLeaveBalanceAction`);
         if (result)
             return result.recordset;
@@ -214,16 +221,16 @@ const getLeaves = async (req, res) => {
 
 
                 let ext = element.image.split('.');
-                console.log('element', element.image)
+                //console.log('element', element.image)
                 const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
 
-                console.log('image', image)
+                //console.log('image', image)
 
                 element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
             });
 
 
-            console.log('result.recordset', result.recordset)
+            //console.log('result.recordset', result.recordset)
 
             return result.recordset;
         }
@@ -289,7 +296,7 @@ const getLeavesById = async (req, res) => {
 
 const updateLeaves = async (req, res) => {
 
-    console.log('req', req)
+    //console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -317,7 +324,7 @@ const updateLeaves = async (req, res) => {
 
 const applyLeave = async (req, res) => {
 
-    console.log('req', req)
+    //console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -362,7 +369,7 @@ const deleteLeaves = async (req, res) => {
 const encashLeaves = async (req, res) => {
     try {
 
-        console.log(req.ids.join(","))
+        //console.log(req.ids.join(","))
 
         const pool = await poolPromise;
         const result = await pool.request()
@@ -370,7 +377,7 @@ const encashLeaves = async (req, res) => {
             .execute(`encashLeaves`);
         if (result.recordset.length > 0) {
 
-            console.log('result.recordset', result.recordset)
+            //console.log('result.recordset', result.recordset)
 
             return result.recordset;
         }
