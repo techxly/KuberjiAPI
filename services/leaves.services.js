@@ -122,16 +122,17 @@ const getLeaveTypes = async (req, res) => {
 }
 
 const getAllLeaves = async (req, res) => {
+
+    console.log('req', req)
+
     try {
 
-        console.log('req', req)
 
         const pool = await poolPromise;
         const result = await pool.request()
             .input('siteId', req.siteId)
+            .input('level', req.level)
             .execute(`getAllLeaves`);
-
-        console.log('result', result)
 
         if (result.recordset.length > 0) {
             result.recordset.forEach(element => {
@@ -161,6 +162,7 @@ const getLeaveBalance = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('siteId', req.siteId)
+            .input('level', req.level)
             .execute(`getLeaveBalance`);
         //console.log('result.recordsets', result.recordsets)
         if (result)
@@ -178,6 +180,7 @@ const getLeaveBalanceAction = async (req, res) => {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('siteId', req.siteId)
+            .input('level', req.level)
             .execute(`getLeaveBalanceAction`);
         if (result)
             return result.recordset;

@@ -82,8 +82,6 @@ const sendResetLink = async (data) => {
 
 const addNotifications = async (req) => {
 
-    console.log('req', req)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -173,9 +171,32 @@ const markAsRead = async (req) => {
 
 }
 
+const getDefaultValues = async (req) => {
+
+    //console.log('req', req)
+
+    try {
+
+        const data = {
+            lateTime: process.env.LATE_TIME_DURATION,
+            halfDay: process.env.HALF_DAY_TIME,
+            inTime: process.env.IN_TIME,
+            outTime: process.env.OUT_TIME
+        }
+
+        return data
+
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+
+}
+
 module.exports = {
     sendResetLink: sendResetLink,
     checkNotifications: checkNotifications,
     addNotifications: addNotifications,
-    markAsRead: markAsRead
+    markAsRead: markAsRead,
+    getDefaultValues: getDefaultValues
 }

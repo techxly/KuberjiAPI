@@ -92,10 +92,32 @@ const markAsRead = (req, res) => {
         })
 }
 
+const getDefaultValues = (req, res) => {
+
+    return miscService.getDefaultValues()
+        .then(resData => {
+
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'defaultData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 module.exports = {
     sendResetLink: sendResetLink,
     checkNotifications: checkNotifications,
     addNotifications: addNotifications,
-    markAsRead: markAsRead
+    markAsRead: markAsRead,
+    getDefaultValues: getDefaultValues
+
 }
 

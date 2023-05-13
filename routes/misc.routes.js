@@ -8,6 +8,7 @@ module.exports = app => {
     router.post("/checkNotifications", miscController.checkNotifications);
     router.post("/addNotifications", miscController.addNotifications);
     router.post("/markAsRead", miscController.markAsRead);
+    router.get("/getDefaultValues", miscController.getDefaultValues);
 
     app.use('/api', router);
 }

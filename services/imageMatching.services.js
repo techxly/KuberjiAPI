@@ -18,7 +18,6 @@ const userIncomingImage = new Image();
 const faceReco = async (req, res) => {
 
     userId = req.id;
-    //console.log('userId', userId)
     try {
 
         const MODEL_URL = './public/models'; // set .env path in future
@@ -36,27 +35,35 @@ const faceReco = async (req, res) => {
         await faceapi.nets.ssdMobilenetv1.loadFromDisk(MODEL_URL);
 
 
-        let files = await fs.readdir("./public/userImages/");
-        //console.log('files', files)
-        //Promise.all([
-        const labeledFaceDescriptors = await loadLabeledImages(files);
+        // let file = await fs.readdir(`./public/userImages/${userId}/`);
+        // console.log('file', file)
+        // //Promise.all([
+
+        const descriptions = []
+        const userStoredImage = new Image();
+        userStoredImage.src = `./public/userImages/${userId}.png`
+
+        const detectionsUser = await faceapi.detectSingleFace(userStoredImage).withFaceLandmarks().withFaceDescriptor();
+
+        descriptions.push(detectionsUser.descriptor)
+
+        const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(userId, descriptions)
+
         const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
         const detections = await faceapi.detectSingleFace(userIncomingImage).withFaceLandmarks().withFaceDescriptor();
-        if(detections){
+        if (detections) {
             const result = await faceMatcher.findBestMatch(detections.descriptor);
-        //]).then(() => {
-        //console.log('result', result);
-        return (result._label);
+            if (result) {
+                return (result._label);
+            }
         }
-        else{
-            //res.status(200);
+        else {
             return null
         }
-        
+
         //});
 
     } catch (error) {
-        console.log('error', error)
         res.status(500);
         return error.message;
     }

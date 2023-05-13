@@ -7,8 +7,6 @@ const roleController = require('../controller/site.controller');
 
 const addRole = async (req, res) => {
 
-    console.log('req', req)
-
     try {
         const pool = await poolPromise;
 
@@ -23,8 +21,6 @@ const addRole = async (req, res) => {
             ${1})`
             );
 
-
-        console.log('result', result)
 
 
         const maxId = await pool.request()
@@ -99,7 +95,7 @@ const getRoles = async (req, res) => {
 
 const updateRole = async (req, res) => {
 
-    //console.log('req', req)
+    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -116,7 +112,7 @@ const updateRole = async (req, res) => {
             )
         });
 
-        //console.log('JSON.stringify(req.list)', JSON.stringify(req.list))
+        console.log('JSON.stringify(req.list)', JSON.stringify(req.list))
         const result = await pool.request()
             //.input('role_module', sql.TYPES.TVP, table)
             .input('role_module', JSON.stringify(req.list))
@@ -127,7 +123,7 @@ const updateRole = async (req, res) => {
             .execute(`updateRole`);
 
 
-        //console.log('result', result)
+        console.log('result', result)
 
         if (result) {
             return result.recordset;

@@ -176,9 +176,6 @@ const login = async (req, res) => {
             .query(`SELECT id, password from employee WHERE userName = '${req.userName}' AND isActive = 1`);
 
 
-        console.log('result', result)
-
-
         if (result) {
             let id = result.recordset[0].id
             let h_password = result.recordset[0].password
@@ -196,7 +193,7 @@ const login = async (req, res) => {
 
                 const pool = await poolPromise;
                 const result = await pool.request()
-                    .query(`SELECT e.id,e.image,e.userName,es.siteId, e.email, e.isUserImageAdded, e.firstName+' '+e.lastName as fullName, r.role, r.level  from employee as e
+                    .query(`SELECT e.id,e.image,e.userName, es.siteId, e.email, e.isUserImageAdded, e.firstName+' '+e.lastName as fullName, r.role, r.level  from employee as e
                 INNER JOIN employee_role as er on er.employeeId = e.id
                 INNER JOIN role as r on r.Id = er.roleId
                 Inner join employee_site as es on es.employeeId = e.id
@@ -205,10 +202,6 @@ const login = async (req, res) => {
                 AND er.isActive = 1
                 AND r.isActive = 1
                 `)
-
-
-                console.log('result.recordset', result.recordset)
-
 
                 if (result) {
 
@@ -336,8 +329,15 @@ const verifyToken = async (req, res) => {
 
         if (verified) {
             const pool = await poolPromise;
-            const result = await pool.request()
-                .query(`SELECT e.id,e.userName, e.email,es.siteId, e.firstName+' '+e.lastName as fullName,e.image, r.role, e.isUserImageAdded, r.level  from employee as e
+            const result =  await pool.request()
+                .query(verified.userId && verified.userId == 1 ? `SELECT e.id,e.userName, e.email, e.firstName+' '+e.lastName as fullName,e.image, r.role, e.isUserImageAdded, r.level  from employee as e
+                INNER JOIN employee_role as er on er.employeeId = e.id
+                INNER JOIN role as r on r.Id = er.roleId
+                WHERE e.id = '${verified.userId}' 
+                AND e.isActive = 1
+                AND er.isActive = 1
+                AND r.isActive = 1
+                ` : `SELECT e.id,e.userName, e.email,es.siteId, e.firstName+' '+e.lastName as fullName,e.image, r.role, e.isUserImageAdded, r.level  from employee as e
             INNER JOIN employee_role as er on er.employeeId = e.id
             INNER JOIN role as r on r.Id = er.roleId
             Inner join employee_site as es on es.employeeId = e.id
@@ -346,8 +346,6 @@ const verifyToken = async (req, res) => {
             AND er.isActive = 1
             AND r.isActive = 1
             `)
-
-            //console.log('result', result)
 
             if (result) {
 
@@ -605,8 +603,6 @@ const getUser = async (req, res) => {
             AND er.isActive = 1 
             AND r.isActive = 1`);
 
-                console.log('result', result)
-
                 if (result)
                     return result.recordset[0];
                 else
@@ -769,9 +765,6 @@ const getUsersBySite = async (req, res) => {
         const result = await pool.request()
             .input('siteId', parseInt(req.siteId))
             .execute('getUsersBySite')
-
-        console.log('result', result)
-
 
         if (result) {
 

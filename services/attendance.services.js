@@ -47,13 +47,13 @@ const getTodaysAttendance = async (req, res) => {
 
 const getAttendanceByUser = async (req, res) => {
 
-    //console.log('req-----###', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('userId', req.userId)
             .input('month', req.month)
             .input('year', req.year)
+            .input('siteId', req.siteId)
             .execute(`getAttendanceByUser`);
 
 
@@ -71,18 +71,17 @@ const getAttendanceByUser = async (req, res) => {
 
 const getAttendanceSheetData = async (req, res) => {
 
-
     console.log('req', req)
 
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .input('attDate', req.date)
+            .input('Month', req.month)
+            .input('Year', req.year)
             .input('siteId', req.siteId)
             .execute('getAttendanceSheetData');
         //.execute(`getAttendanceSheetData`);
 
-        console.log('result', result.recordset)
         if (result)
             return result.recordset;
         else
@@ -145,6 +144,7 @@ const addAttendance = async (req, res) => {
             .input('inTime', req.inTime)
             .input('outTime', req.outTime)
             .input('filledBy', req.filledBy)
+            .input('reason', req.reason)
             .execute(`addAttendance`);
 
         if (result)
