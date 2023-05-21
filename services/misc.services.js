@@ -12,8 +12,6 @@ const miscController = require('../controller/site.controller');
 
 const sendResetLink = async (data) => {
 
-
-    let resData = {};
     try {
 
         const pool = await poolPromise;
@@ -53,20 +51,18 @@ const sendResetLink = async (data) => {
                 html: data.html.replace(/##token##/g, token)
             };
 
+            const mailResult = await transporter.sendMail(mailOptions).then(info => {
+                return "Success"
+            }).catch(err => {
+                return "Failed"
+            })
 
-            return transporter.sendMail(mailOptions, function (err, info) {
-                mailOptions.err = err;
-                mailOptions.info = info;
-                mailOptions.status = (info !== null || info !== undefined);
-
-                if (err) {
-                    return null
-                } else {
-                    return mailOptions
-                }
-
-            });
-
+            if (mailResult == "Success") {
+                return mailResult
+            }
+            else {
+                return null
+            }
         }
         else {
             res.status(500);
@@ -135,7 +131,6 @@ const sendContactMail = async (req) => {
             return "Failed"
         });
 
-        console.log('result', result)
         if (result == "Success") {
             return result
         }
