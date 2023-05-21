@@ -24,10 +24,12 @@ const getAllUsers = async (req, res) => {
             AND e.id != -1
             `);
 
-
+        console.log('result.recordset', result.recordset)
 
 
         if (result) {
+
+            console.log('result.recordset', result.recordset)
 
             result.recordset.forEach(element => {
 
@@ -41,7 +43,7 @@ const getAllUsers = async (req, res) => {
                 }
             });
 
-            //console.log('result.recordset', result.recordset)
+            console.log('result.recordset', result.recordset)
 
             return result.recordset;
         }
@@ -55,12 +57,14 @@ const getAllUsers = async (req, res) => {
 
 const getAllUsersBasics = async (req, res) => {
     try {
+
+        console.log('req.level', req.level)
         const pool = await poolPromise;
         const result = await pool.request()
             .query(`SELECT e.id, e.userName, e.employeeCode, e.firstName +' '+ e.lastName as name FROM 
             employee as e INNER JOIN 
             employee_role as er ON e.id = er.employeeId INNER JOIN
-			role as r ON r.id = er.roleId INNER JOIN
+			role as r ON r.id = er.roleId and r.level > ${req.level}  INNER JOIN
             employee_site as es ON e.id = es.employeeId INNER JOIN 
             [site] as s ON s.id = es.siteId
             AND e.id != -1
@@ -168,7 +172,7 @@ const getMaxUserName = async (req, res) => {
 
 const login = async (req, res) => {
 
-    //console.log('req', req)
+    console.log('req- Login', req)
 
     try {
         const pool = await poolPromise;
@@ -192,17 +196,31 @@ const login = async (req, res) => {
                 token = jwt.sign(Data, jwtSecretKey);
 
                 const pool = await poolPromise;
-                const result = await pool.request()
-                    .query(`SELECT e.id,e.image,e.userName, es.siteId, e.email, e.isUserImageAdded, e.firstName+' '+e.lastName as fullName, r.role, r.level  from employee as e
+                const result =
+                    id == 1 ?
+                        await pool.request()
+                            .query(`SELECT e.id,e.image,e.userName, e.email, e.isUserImageAdded, e.firstName+' '+e.lastName as fullName, r.role, r.level  from employee as e
+                INNER JOIN employee_role as er on er.employeeId = e.id
+                INNER JOIN role as r on r.Id = er.roleId
+                WHERE e.id = ${id} AND
+                e.isActive = 1
+                AND er.isActive = 1
+                AND r.isActive = 1
+                `)
+                        :
+                        await pool.request()
+                            .query(`SELECT e.id,e.image,s.lat,s.lon,s.radius, s.unit, e.userName, es.siteId, e.email, e.isUserImageAdded, e.firstName+' '+e.lastName as fullName, r.role, r.level  from employee as e
                 INNER JOIN employee_role as er on er.employeeId = e.id
                 INNER JOIN role as r on r.Id = er.roleId
                 Inner join employee_site as es on es.employeeId = e.id
-                ${id != 1 ? `WHERE e.id = ${id} AND ` : `WHERE`} 
+                INNER JOIN site s on es.siteId = s.id
+                WHERE e.id = ${id} AND
                 e.isActive = 1
                 AND er.isActive = 1
                 AND r.isActive = 1
                 `)
 
+                console.log('result.recordset', result.recordset)
                 if (result) {
 
 
@@ -329,7 +347,7 @@ const verifyToken = async (req, res) => {
 
         if (verified) {
             const pool = await poolPromise;
-            const result =  await pool.request()
+            const result = await pool.request()
                 .query(verified.userId && verified.userId == 1 ? `SELECT e.id,e.userName, e.email, e.firstName+' '+e.lastName as fullName,e.image, r.role, e.isUserImageAdded, r.level  from employee as e
                 INNER JOIN employee_role as er on er.employeeId = e.id
                 INNER JOIN role as r on r.Id = er.roleId

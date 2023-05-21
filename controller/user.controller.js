@@ -154,7 +154,7 @@ const getAllUsers = (req, res) => {
 }
 
 const getAllUsersBasics = (req, res) => {
-    return userService.getAllUsersBasics()
+    return userService.getAllUsersBasics(req.body)
         .then(resData => {
             res.status(200).json({
                 'success': true,

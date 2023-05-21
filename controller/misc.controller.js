@@ -28,6 +28,38 @@ const sendResetLink = (req, res) => {
             })
         })
 }
+const sendContactMail = (req, res) => {
+
+
+
+    return miscService.sendContactMail(req.body)
+        .then(resData => {
+
+            if (resData == "Success") {
+                res.status(200).json({
+                    'success': true,
+                    'code': 200,
+                    'data': resData
+                })
+            }
+            else {
+                res.status(200).json({
+                    'success': false,
+                    'code': 500,
+                    'data': "Failed"
+                })
+            }
+        })
+        .catch(error => {
+
+            console.log('error', error)
+            res.status(200).json({
+                'success': false,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 const checkNotifications = (req, res) => {
 
@@ -114,6 +146,7 @@ const getDefaultValues = (req, res) => {
 
 module.exports = {
     sendResetLink: sendResetLink,
+    sendContactMail: sendContactMail,
     checkNotifications: checkNotifications,
     addNotifications: addNotifications,
     markAsRead: markAsRead,

@@ -5,6 +5,7 @@ module.exports = app => {
 
 
     router.post("/sendResetLink", miscController.sendResetLink);
+    router.post("/sendContactMail", miscController.sendContactMail);
     router.post("/checkNotifications", miscController.checkNotifications);
     router.post("/addNotifications", miscController.addNotifications);
     router.post("/markAsRead", miscController.markAsRead);

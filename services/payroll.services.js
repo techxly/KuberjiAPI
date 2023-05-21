@@ -51,11 +51,7 @@ const getPayroll = async (req, res) => {
             .input('aYear', req.year)
             .execute(`getPayroll`);
 
-
-
-
         if (result.recordset.length > 0) {
-
 
             result.recordset.forEach(element => {
 
@@ -81,7 +77,7 @@ const getPayroll = async (req, res) => {
 }
 
 const getPaySlipDetails = async (req, res) => {
-    //console.log('req',req)
+    console.log('req',req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()

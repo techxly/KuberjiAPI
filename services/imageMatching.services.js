@@ -30,6 +30,7 @@ const faceReco = async (req, res) => {
             else if (!require("fs").existsSync(`./public/temp/temp_${userId}.png`))
                 uploaded = false
         });
+
         await faceapi.nets.faceRecognitionNet.loadFromDisk(MODEL_URL);
         await faceapi.nets.faceLandmark68Net.loadFromDisk(MODEL_URL);
         await faceapi.nets.ssdMobilenetv1.loadFromDisk(MODEL_URL);
@@ -42,6 +43,8 @@ const faceReco = async (req, res) => {
         const descriptions = []
         const userStoredImage = new Image();
         userStoredImage.src = `./public/userImages/${userId}.png`
+
+        console.log('userStoredImage', userStoredImage)
 
         const detectionsUser = await faceapi.detectSingleFace(userStoredImage).withFaceLandmarks().withFaceDescriptor();
 

@@ -79,9 +79,80 @@ const sendResetLink = async (data) => {
         return error.message;
     }
 }
+const sendContactMail = async (req) => {
+
+    try {
+
+        //console.log('result', result.recordset[0])
+        let jwtSecretKey = await process.env.JWT_SECRET_KEY_EMAIL;
+
+        let tData = await {
+            time: Date(),
+            email: req.emailId,
+            expiresIn: parseInt(process.env.JWT_EXPIRES_IN_EMAIL) // expires in 24 hours
+        }
+
+        let token = await jwt.sign(tData, jwtSecretKey);
+
+        const transporter = await nodemailer.createTransport({
+            service: process.env.SERVICE,
+            host: process.env.HOST,
+            port: process.env.EMAIL_PORT,
+            secure: false,
+            auth: {
+                user: process.env.ADMIN_EMAIL,
+                pass: process.env.ADMIN_PASS
+            }
+        });
+
+        // to user
+        let mailOptions = {
+            from: process.env.ADMIN_NAME + `<${process.env.ADMIN_EMAIL}>`,
+            to: req.emailId,
+            subject: "Shriji Kuberji- Contact",
+            html: `Thank you for contacting us. </br> We will connect you shortly.`
+        };
+
+        let mailOptionsAdmin = {
+            from: process.env.ADMIN_NAME + `<${process.env.ADMIN_EMAIL}>`,
+            to: process.env.ADMIN_NAME + `<${process.env.ADMIN_EMAIL}>`,
+            subject: "Shriji Kuberji- Contact",
+            html: `User ${req.UserName} (${req.emailId}) has sent a message via conact. <br/> Message: ${req.message}`
+        };
+
+        const result = await transporter.sendMail(mailOptions).then(async (res) => {
+            if (res) {
+                const innerResult = await transporter.sendMail(mailOptions).then(res => {
+                    if (res) {
+                        return "Success"
+                    }
+                }).catch(err => {
+                    return "Failed"
+                });
+                return innerResult
+            }
+        }).catch(err => {
+            return "Failed"
+        });
+
+        console.log('result', result)
+        if (result == "Success") {
+            return result
+        }
+        else {
+            return null
+        }
+
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
 
 const addNotifications = async (req) => {
 
+    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -91,6 +162,7 @@ const addNotifications = async (req) => {
             .input('path', req.path)
             .input('msgFrom', req.msgFrom)
             .input('msgFor', req.msgFor)
+            .input('levelFor', req.level)
             .execute(`addNotifications`);
 
         if (result) {
@@ -122,12 +194,13 @@ const addNotifications = async (req) => {
 
 const checkNotifications = async (req) => {
 
-    //console.log('req', req)
+    console.log('checkNotifications', req)
 
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.id)
+            .input('level', req.level)
             .execute(`checkNotifications`);
 
         if (result.recordset.length > 0) {
@@ -195,6 +268,7 @@ const getDefaultValues = async (req) => {
 
 module.exports = {
     sendResetLink: sendResetLink,
+    sendContactMail: sendContactMail,
     checkNotifications: checkNotifications,
     addNotifications: addNotifications,
     markAsRead: markAsRead,

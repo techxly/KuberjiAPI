@@ -13,7 +13,7 @@ module.exports = app => {
     router.post('/updateUser', userController.updateUser);
     router.post('/deleteUser', userController.deleteUser);
     router.get('/allUsers', userController.getAllUsers);
-    router.get('/getAllUsersBasics', userController.getAllUsersBasics);
+    router.post('/getAllUsersBasics', userController.getAllUsersBasics);
     router.post('/getUsersBySearch', userController.getUsersBySearch);
     router.get('/getUserCount', userController.getUserCount);
     router.post('/userProfile', userController.getUserProfile);

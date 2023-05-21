@@ -337,6 +337,7 @@ const applyLeave = async (req, res) => {
             .input('leaveType', req.leaveType)
             .input('leaveFrom', req.leaveFrom)
             .input('leaveTo', req.leaveTo)
+            .input('level', req.level)
             .input('reason', req.reason)
             .execute(`applyLeave`);
 
@@ -372,7 +373,7 @@ const deleteLeaves = async (req, res) => {
 const encashLeaves = async (req, res) => {
     try {
 
-        //console.log(req.ids.join(","))
+        console.log(req.ids.join(","))
 
         const pool = await poolPromise;
         const result = await pool.request()
@@ -380,7 +381,7 @@ const encashLeaves = async (req, res) => {
             .execute(`encashLeaves`);
         if (result.recordset.length > 0) {
 
-            //console.log('result.recordset', result.recordset)
+            console.log('result.recordset', result.recordset)
 
             return result.recordset;
         }
