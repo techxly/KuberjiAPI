@@ -34,7 +34,12 @@ const getHoliday = async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .query(`SELECT * FROM holiday WHERE isActive=1`);
+            .query(`SELECT [id]
+            ,[name]
+            ,[date]
+            ,[note]
+            ,[isActive]
+        FROM [holiday] where isActive = 1 order by date desc`);
         if (result) {
             return result.recordset;
         }
