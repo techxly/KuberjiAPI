@@ -299,7 +299,7 @@ const getLeavesById = async (req, res) => {
 
 const updateLeaves = async (req, res) => {
 
-    //console.log('req', req)
+    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -312,6 +312,8 @@ const updateLeaves = async (req, res) => {
             .input('leaveType', req.leaveType)
             .input('leaveTo', req.leaveTo)
             .input('status', req.status)
+            .input('level', req.level)
+            .input('siteId', req.siteId)
             .execute(`updateLeaves`);
 
         if (result)

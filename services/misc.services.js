@@ -189,8 +189,6 @@ const addNotifications = async (req) => {
 
 const checkNotifications = async (req) => {
 
-    console.log('checkNotifications', req)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()

@@ -52,7 +52,7 @@ const faceReco = async (req, res) => {
 
         const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(userId, descriptions)
 
-        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
+        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.85);
         const detections = await faceapi.detectSingleFace(userIncomingImage).withFaceLandmarks().withFaceDescriptor();
         if (detections) {
             const result = await faceMatcher.findBestMatch(detections.descriptor);

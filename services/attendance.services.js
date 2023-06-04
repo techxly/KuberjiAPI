@@ -94,6 +94,10 @@ const getAttendanceSheetData = async (req, res) => {
 
 const uploadUserImage = async (req, res) => {
 
+
+    console.log('req', req)
+
+
     try {
         //upload logic
 
@@ -133,7 +137,7 @@ const addAttendance = async (req, res) => {
     try {
         //upload logic
 
-        //console.log('req', req)
+        console.log('req', req)
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.employeeId)
@@ -146,6 +150,7 @@ const addAttendance = async (req, res) => {
             .input('filledBy', req.filledBy)
             .input('reason', req.reason)
             .execute(`addAttendance`);
+        //.execute(req.inTime == null ? `updateAttendance`:`addAttendance`);
 
         if (result)
             return result.recordset[0];
@@ -158,6 +163,41 @@ const addAttendance = async (req, res) => {
     }
 }
 
+const checkPunchInStatus = async (req, res) => {
+
+    try {
+        //upload logic
+
+        console.log('req', req.employeeId, moment().format("YYYY/MM/DD"), parseInt(moment().format("MM")), parseInt(moment().format("YYYY")))
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('id', req.employeeId)
+            .input('aDate', moment().format("YYYY/MM/DD"))
+            .input('aMonth', parseInt(moment().format("MM")))
+            .input('aYear', parseInt(moment().format("YYYY")))
+            .execute(`checkPunchInStatus`);
+
+        if (result.recordset[0]) {
+
+            if (result.recordset[0].outTime == undefined || result.recordset[0].outTime == "" || result.recordset[0].outTime == null) {
+                return 1
+            }
+            else {
+                return 0
+            }
+
+        }
+        else{
+            return 0;
+        }
+
+    } catch (error) {
+        console.log('error', error)
+        res.status(500);
+        return error.message;
+    }
+}
+
 module.exports = {
     addAttendance: addAttendance,
     getAttendanceByDate: getAttendanceByDate,
@@ -165,4 +205,5 @@ module.exports = {
     getAttendanceByUser: getAttendanceByUser,
     getAttendanceSheetData: getAttendanceSheetData,
     uploadUserImage: uploadUserImage,
+    checkPunchInStatus: checkPunchInStatus,
 }

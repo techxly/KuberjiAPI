@@ -9,6 +9,7 @@ module.exports = app => {
     router.post('/getAttendanceByUser', attendanceController.getAttendanceByUser);
     router.post('/getAttendanceSheetData', attendanceController.getAttendanceSheetData);
     router.post('/uploadUserImage', attendanceController.uploadUserImage);
+    router.post('/checkPunchInStatus', attendanceController.checkPunchInStatus);
 
     app.use('/api', router);
 }

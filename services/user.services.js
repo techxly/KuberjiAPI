@@ -66,7 +66,7 @@ const getAllUsersBasics = async (req, res) => {
             employee_role as er ON e.id = er.employeeId INNER JOIN
 			role as r ON r.id = er.roleId and r.level > ${req.level}  INNER JOIN
             employee_site as es ON e.id = es.employeeId INNER JOIN 
-            [site] as s ON s.id = es.siteId
+            site as s ON s.id = es.siteId
             AND e.id != -1
             `);
 
@@ -172,8 +172,6 @@ const getMaxUserName = async (req, res) => {
 
 const login = async (req, res) => {
 
-    console.log('req- Login', req)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -225,7 +223,7 @@ const login = async (req, res) => {
 
 
                     result.recordset.forEach(element => {
-                        //console.log('element', element)
+                        console.log('element', element.image)
                         if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
                             //console.log('1')
                             let ext = element.image.split('.');
@@ -234,7 +232,7 @@ const login = async (req, res) => {
                             //console.log('ext', ext)
                             const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
 
-                            //console.log('image', image)
+                            console.log('image', image)
                             //console.log("3")
                             element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
                             //console.log("4")

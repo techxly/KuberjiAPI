@@ -117,6 +117,29 @@ const addAttendance = (req, res) => {
             })
         })
 }
+const checkPunchInStatus = (req, res) => {
+
+    //console.log('req', req)
+
+    return attendanceService.checkPunchInStatus(req.body)
+        .then(resData => {
+
+            //console.log('resData', resData)
+
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'status': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
 
 module.exports = {
     addAttendance: addAttendance,
@@ -125,4 +148,5 @@ module.exports = {
     getAttendanceByUser: getAttendanceByUser,
     getAttendanceSheetData: getAttendanceSheetData,
     uploadUserImage: uploadUserImage,
+    checkPunchInStatus: checkPunchInStatus,
 }
