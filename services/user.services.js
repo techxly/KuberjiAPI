@@ -21,7 +21,7 @@ const getAllUsers = async (req, res) => {
 			role as r ON r.id = er.roleId INNER JOIN
             employee_site as es ON e.id = es.employeeId INNER JOIN 
             [site] as s ON s.id = es.siteId
-            AND e.id != -1
+            AND e.id != -1 and e.isActive = 1
             `);
 
         console.log('result.recordset', result.recordset)
@@ -33,10 +33,15 @@ const getAllUsers = async (req, res) => {
 
             result.recordset.forEach(element => {
 
-                if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                if (element.image && element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.image = defaultImage;
+                    }
                 }
                 else {
                     element.image = defaultImage;
@@ -50,6 +55,7 @@ const getAllUsers = async (req, res) => {
         else
             return null;
     } catch (error) {
+        console.log('error', error)
         res.status(500);
         return error.message;
     }
@@ -60,13 +66,24 @@ const getAllUsersBasics = async (req, res) => {
 
         console.log('req.level', req.level)
         const pool = await poolPromise;
-        const result = await pool.request()
-            .query(`SELECT e.id, e.userName, e.employeeCode, e.firstName +' '+ e.lastName as name FROM 
+        const result = req.level == 0 ?
+            await pool.request()
+                .query(`SELECT e.id, e.userName, e.employeeCode, e.firstName +' '+ e.lastName as name FROM 
+        employee as e INNER JOIN 
+        employee_role as er ON e.id = er.employeeId and e.isActive = 1 INNER JOIN
+        role as r ON r.id = er.roleId and r.level > ${req.level}  INNER JOIN
+        employee_site as es ON e.id = es.employeeId INNER JOIN 
+        site as s ON s.id = es.siteId
+        AND e.id != -1
+        `)
+
+            : await pool.request()
+                .query(`SELECT e.id, e.userName, e.employeeCode, e.firstName +' '+ e.lastName as name FROM 
             employee as e INNER JOIN 
-            employee_role as er ON e.id = er.employeeId INNER JOIN
+            employee_role as er ON e.id = er.employeeId and e.isActive = 1 INNER JOIN
 			role as r ON r.id = er.roleId and r.level > ${req.level}  INNER JOIN
             employee_site as es ON e.id = es.employeeId INNER JOIN 
-            site as s ON s.id = es.siteId
+            site as s ON s.id = es.siteId and s.id = ${req.siteId}
             AND e.id != -1
             `);
 
@@ -171,7 +188,7 @@ const getMaxUserName = async (req, res) => {
 }
 
 const login = async (req, res) => {
-
+    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -304,9 +321,14 @@ const otherLogin = async (req, res) => {
                 result.recordset.forEach(element => {
                     //console.log('element', element)
                     if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                        let ext = element.image.split('.');
-                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        if (fs.existsSync(`public/userImages/${element.image}`)) {
+                            let ext = element.image.split('.');
+                            const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                            element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        }
+                        else {
+                            element.image = defaultImage
+                        }
                     }
                     else {
                         element.image = defaultImage
@@ -656,7 +678,8 @@ const getUserById = async (req, res) => {
             ,employee.[zipCode]
             ,employee.[employeeCode]
             ,employee.[emergencyNumber]
-            ,employee.[isActive],site.id as siteId, role.id as roleId 
+            ,employee.[isActive],site.id as siteId, r.id as roleId 
+			,r.role
             ,payroll.CasualLeavesBalance
             ,payroll.SickLeaveBalance
             ,payroll.NonPaidLeaveBalance
@@ -665,7 +688,7 @@ const getUserById = async (req, res) => {
             employee INNER JOIN
             employee_role ON employee.id = employee_role.employeeId INNER JOIN
             employee_site ON employee.id = employee_site.employeeId INNER JOIN
-            role ON employee_role.roleId = role.id INNER JOIN
+            role r ON employee_role.roleId = r.id INNER JOIN
             site ON employee_site.siteId = site.id INNER JOIN
             payroll ON employee.id = payroll.employeeId
             AND employee.id != -1 

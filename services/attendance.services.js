@@ -145,8 +145,8 @@ const addAttendance = async (req, res) => {
             .input('outDate', req.outDate)
             .input('aMonth', req.aMonth)
             .input('aYear', req.aYear)
-            .input('inTime', req.inTime)
-            .input('outTime', req.outTime)
+            .input('inTime', req.inTime == null ? null : moment().format("HH:mm:ss"))
+            .input('outTime', req.outTime == null ? null : moment().format("HH:mm:ss"))
             .input('filledBy', req.filledBy)
             .input('reason', req.reason)
             .execute(`addAttendance`);
@@ -165,31 +165,30 @@ const addAttendance = async (req, res) => {
 
 const checkPunchInStatus = async (req, res) => {
 
+
+    console.log('req', req)
     try {
         //upload logic
 
-        console.log('req', req.employeeId, moment().format("YYYY/MM/DD"), parseInt(moment().format("MM")), parseInt(moment().format("YYYY")))
+        console.log('req', req.employeeId, String(moment().format("YYYY/MM/DD")), parseInt(moment().format("MM")), parseInt(moment().format("YYYY")))
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.employeeId)
-            .input('aDate', moment().format("YYYY/MM/DD"))
-            .input('aMonth', parseInt(moment().format("MM")))
+            .input('aDate', `${String(moment().format("YYYY/MM/DD"))}`)
+            .input('aMonth', parseInt(moment().format("M")))
             .input('aYear', parseInt(moment().format("YYYY")))
             .execute(`checkPunchInStatus`);
+        let r = 0
 
         if (result.recordset[0]) {
 
             if (result.recordset[0].outTime == undefined || result.recordset[0].outTime == "" || result.recordset[0].outTime == null) {
-                return 1
-            }
-            else {
-                return 0
+                r = 1
             }
 
         }
-        else{
-            return 0;
-        }
+        
+        return r;
 
     } catch (error) {
         console.log('error', error)
