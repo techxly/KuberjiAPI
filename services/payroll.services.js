@@ -56,10 +56,16 @@ const getPayroll = async (req, res) => {
             result.recordset.forEach(element => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    //console.log('element', element.image)
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
+
+                        let ext = element.image.split('.');
+                        //console.log('element', element.image)
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.image = defaultImage
+                    }
                 }
                 else {
                     element.image = defaultImage
@@ -96,7 +102,7 @@ const getPaySlipDetails = async (req, res) => {
 }
 
 const getPaySlipByEmpMonthYear = async (req, res) => {
-    console.log('req',req)
+    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()

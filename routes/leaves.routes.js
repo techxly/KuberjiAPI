@@ -20,6 +20,7 @@ module.exports = app => {
     router.post('/leaveBalanceAction', leavesController.getLeaveBalanceAction);
     router.post('/encashLeaves', leavesController.encashLeaves);
     router.post('/applyLeave', leavesController.applyLeave);
+    router.post('/getLeaveBalanceBasic', leavesController.getLeaveBalanceBasic);
 
     app.use('/api', router);
 }

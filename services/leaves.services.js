@@ -121,6 +121,26 @@ const getLeaveTypes = async (req, res) => {
     }
 }
 
+const getLeaveBalanceBasic = async (req, res) => {
+
+    console.log('req', req)
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('userId', req.employeeId)
+            .execute(`getLeaveBalanceBasic`);
+
+        console.log('result', result)
+        if (result)
+            return result.recordset;
+        else
+            return null;
+    } catch (error) {
+        res.status(500);
+        return error.message;
+    }
+}
+
 const getAllLeaves = async (req, res) => {
 
     console.log('req', req)
@@ -138,9 +158,16 @@ const getAllLeaves = async (req, res) => {
             result.recordset.forEach(element => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
+
+
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.img = defaultImage
+                    }
                 } else {
                     element.img = defaultImage
                 }
@@ -220,16 +247,25 @@ const getLeaves = async (req, res) => {
 
 
             result.recordset.forEach(element => {
+                if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
 
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
 
+                        let ext = element.image.split('.');
+                        //console.log('element', element.image)
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
 
-                let ext = element.image.split('.');
-                //console.log('element', element.image)
-                const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        //console.log('image', image)
 
-                //console.log('image', image)
-
-                element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.img = defaultImage
+                    }
+                }
+                else {
+                    element.img = defaultImage
+                }
             });
 
 
@@ -278,9 +314,16 @@ const getLeavesById = async (req, res) => {
             result.recordset.forEach(element => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
+
+
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.img = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.img = defaultImage
+                    }
                 } else {
                     element.img = defaultImage
                 }
@@ -412,5 +455,6 @@ module.exports = {
     getLeaveBalance: getLeaveBalance,
     getLeaveBalanceAction: getLeaveBalanceAction,
     encashLeaves: encashLeaves,
-    applyLeave: applyLeave
+    applyLeave: applyLeave,
+    getLeaveBalanceBasic: getLeaveBalanceBasic
 }

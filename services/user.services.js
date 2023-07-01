@@ -21,7 +21,7 @@ const getAllUsers = async (req, res) => {
 			role as r ON r.id = er.roleId INNER JOIN
             employee_site as es ON e.id = es.employeeId INNER JOIN 
             [site] as s ON s.id = es.siteId
-            AND e.id != -1 and e.isActive = 1
+            AND e.id != -1 
             `);
 
         console.log('result.recordset', result.recordset)
@@ -130,9 +130,15 @@ const getUsersBySearch = async (req, res) => {
             result.recordset.forEach(element => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
+
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.image = defaultImage
+                    }
                 }
                 else {
                     element.image = defaultImage
@@ -239,29 +245,42 @@ const login = async (req, res) => {
                 if (result) {
 
 
+
                     result.recordset.forEach(element => {
                         console.log('element', element.image)
                         if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                            //console.log('1')
-                            let ext = element.image.split('.');
-                            //console.log("2")
+                            if (fs.existsSync(`public/userImages/${element.image}`)) {
 
-                            //console.log('ext', ext)
-                            const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                                //console.log('1')
+                                let ext = element.image.split('.');
+                                //console.log("2")
 
-                            console.log('image', image)
-                            //console.log("3")
-                            element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
-                            //console.log("4")
+                                //console.log('ext', ext)
+                                const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+
+                                console.log('image', image)
+                                //console.log("3")
+                                element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                                //console.log("4")
+                            }
+                            else {
+                                element.image = defaultImage
+                            }
                         }
                         else {
                             element.image = defaultImage
                         }
 
+
+
                         //console.log('element--New->', element)
 
                     });
 
+                    const pool = await poolPromise;
+                    const resultFCM = await pool.request()
+                        .query(`update employee set FCM = '${req.fcm}' where 
+                        id = ${id} AND isActive = 1`)
 
                     //console.log('result.recordset[0]', result.recordset[0])
                     //console.log('token', token)
@@ -282,6 +301,7 @@ const login = async (req, res) => {
             return null;
         }
     } catch (error) {
+        console.log('error', error)
         res.status(500);
         return error.message;
     }
@@ -322,9 +342,15 @@ const otherLogin = async (req, res) => {
                     //console.log('element', element)
                     if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
                         if (fs.existsSync(`public/userImages/${element.image}`)) {
-                            let ext = element.image.split('.');
-                            const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                            element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                            if (fs.existsSync(`public/userImages/${element.image}`)) {
+
+                                let ext = element.image.split('.');
+                                const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                                element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                            }
+                            else {
+                                element.image = defaultImage
+                            }
                         }
                         else {
                             element.image = defaultImage
@@ -389,9 +415,14 @@ const verifyToken = async (req, res) => {
 
                 result.recordset.forEach(element => {
                     if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                        let ext = element.image.split('.');
-                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        if (fs.existsSync(`public/userImages/${element.image}`)) {
+
+                            let ext = element.image.split('.');
+                            const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                            element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        } else {
+                            element.image = defaultImage
+                        }
                     }
                     else {
                         element.image = defaultImage
@@ -503,9 +534,15 @@ const addUser = async (req, res) => {
 
             result.recordset.forEach(element => {
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
+
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    }
+                    else {
+                        element.image = defaultImage
+                    }
                 } else {
                     element.image = defaultImage
                 }
@@ -555,10 +592,14 @@ const updateUser = async (req, res) => {
             result.recordset.forEach(element => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
 
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    } else {
+                        element.image = defaultImage
+                    }
                 } else {
                     element.image = defaultImage
                 }
@@ -588,10 +629,14 @@ const deleteUser = async (req, res) => {
             result.recordset.forEach(element => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
 
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    } else {
+                        element.image = defaultImage
+                    }
                 } else {
                     element.image = defaultImage
                 }
@@ -775,16 +820,21 @@ const getUserProfile = async (req, res) => {
 
         if (result.recordset.length > 0) {
 
-            let orgImage = result.recordset[0].image;
+            if (fs.existsSync(`public/userImages/${element.image}`)) {
 
-            result.recordset[0].imageName = orgImage
+                let orgImage = result.recordset[0].image;
 
-            let ext = orgImage.split('.');
+                result.recordset[0].imageName = orgImage
 
-            const image = fs.readFileSync(`public/userImages/${result.recordset[0].image}`, 'base64');
+                let ext = orgImage.split('.');
 
-            result.recordset[0].image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                const image = fs.readFileSync(`public/userImages/${result.recordset[0].image}`, 'base64');
 
+                result.recordset[0].image = `data:image/${ext[ext.length - 1]};base64,${image}`
+            }
+            else {
+                result.recordset[0].image = defaultImage
+            }
             return result.recordset[0];
         }
         else
@@ -810,9 +860,13 @@ const getUsersBySite = async (req, res) => {
             result.recordset.forEach(element => {
 
                 if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
-                    let ext = element.image.split('.');
-                    const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
-                    element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    if (fs.existsSync(`public/userImages/${element.image}`)) {
+                        let ext = element.image.split('.');
+                        const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
+                        element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
+                    } else {
+                        element.image = defaultImage;
+                    }
                 }
                 else {
                     element.image = defaultImage;

@@ -227,6 +227,25 @@ const applyLeave = (req, res) => {
         })
 }
 
+const getLeaveBalanceBasic = (req, res) => {
+
+    return leavesService.getLeaveBalanceBasic(req.body)
+        .then(resData => {
+            res.status(200).json({
+                'success': true,
+                'code': 200,
+                'leavesData': resData
+            })
+        })
+        .catch(error => {
+            res.status(200).json({
+                'success': true,
+                'code': 500,
+                'data': error
+            })
+        })
+}
+
 const getAllLeaves = (req, res) => {
 
     return leavesService.getAllLeaves(req.body)
@@ -322,5 +341,6 @@ module.exports = {
     getLeaveBalance: getLeaveBalance,
     getLeaveBalanceAction: getLeaveBalanceAction,
     encashLeaves: encashLeaves,
-    applyLeave: applyLeave
+    applyLeave: applyLeave,
+    getLeaveBalanceBasic: getLeaveBalanceBasic
 }

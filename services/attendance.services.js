@@ -35,6 +35,8 @@ const getTodaysAttendance = async (req, res) => {
             .input('siteId', req.siteId)
             .execute(`getTodaysAttendance`);
 
+        console.log('result.recordset', result.recordset)
+
         if (result)
             return result.recordset;
         else
@@ -145,8 +147,8 @@ const addAttendance = async (req, res) => {
             .input('outDate', req.outDate)
             .input('aMonth', req.aMonth)
             .input('aYear', req.aYear)
-            .input('inTime', req.inTime == null ? null : moment().format("HH:mm:ss"))
-            .input('outTime', req.outTime == null ? null : moment().format("HH:mm:ss"))
+            .input('inTime', req.inTime)
+            .input('outTime', req.outTime)
             .input('filledBy', req.filledBy)
             .input('reason', req.reason)
             .execute(`addAttendance`);
@@ -178,20 +180,25 @@ const checkPunchInStatus = async (req, res) => {
             .input('aMonth', parseInt(moment().format("M")))
             .input('aYear', parseInt(moment().format("YYYY")))
             .execute(`checkPunchInStatus`);
-        let r = 0
+        let r = -1
 
         if (result.recordset[0]) {
 
-            if (result.recordset[0].outTime == undefined || result.recordset[0].outTime == "" || result.recordset[0].outTime == null) {
-                r = 1
+            if (!result.recordset[0].outTime || result.recordset[0].outTime == undefined || result.recordset[0].outTime == "" || result.recordset[0].outTime == null) {
+                if (moment(result.recordset[0].inDate).format("DD/MM/YYYY") == moment().format("DD/MM/YYYY")) {
+                    r = 1
+                }
+
+            }
+            else if (moment(result.recordset[0].outDate).format("DD/MM/YYYY") == moment().format("DD/MM/YYYY")) {
+                r = 0
             }
 
         }
-        
+
         return r;
 
     } catch (error) {
-        console.log('error', error)
         res.status(500);
         return error.message;
     }
