@@ -123,14 +123,12 @@ const getLeaveTypes = async (req, res) => {
 
 const getLeaveBalanceBasic = async (req, res) => {
 
-    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('userId', req.employeeId)
             .execute(`getLeaveBalanceBasic`);
 
-        console.log('result', result)
         if (result)
             return result.recordset;
         else
@@ -142,8 +140,6 @@ const getLeaveBalanceBasic = async (req, res) => {
 }
 
 const getAllLeaves = async (req, res) => {
-
-    console.log('req', req)
 
     try {
 
@@ -342,8 +338,6 @@ const getLeavesById = async (req, res) => {
 
 const updateLeaves = async (req, res) => {
 
-    console.log('req', req)
-
     try {
         const pool = await poolPromise;
 
@@ -371,8 +365,6 @@ const updateLeaves = async (req, res) => {
 }
 
 const applyLeave = async (req, res) => {
-
-    //console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -418,15 +410,11 @@ const deleteLeaves = async (req, res) => {
 const encashLeaves = async (req, res) => {
     try {
 
-        console.log(req.ids.join(","))
-
         const pool = await poolPromise;
         const result = await pool.request()
             .input('ids', req.ids.join(","))
             .execute(`encashLeaves`);
         if (result.recordset.length > 0) {
-
-            console.log('result.recordset', result.recordset)
 
             return result.recordset;
         }

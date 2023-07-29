@@ -24,12 +24,7 @@ const getAllUsers = async (req, res) => {
             AND e.id != -1 
             `);
 
-        console.log('result.recordset', result.recordset)
-
-
         if (result) {
-
-            console.log('result.recordset', result.recordset)
 
             result.recordset.forEach(element => {
 
@@ -48,8 +43,6 @@ const getAllUsers = async (req, res) => {
                 }
             });
 
-            console.log('result.recordset', result.recordset)
-
             return result.recordset;
         }
         else
@@ -64,7 +57,6 @@ const getAllUsers = async (req, res) => {
 const getAllUsersBasics = async (req, res) => {
     try {
 
-        console.log('req.level', req.level)
         const pool = await poolPromise;
         const result = req.level == 0 ?
             await pool.request()
@@ -194,7 +186,6 @@ const getMaxUserName = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -241,13 +232,11 @@ const login = async (req, res) => {
                 AND r.isActive = 1
                 `)
 
-                console.log('result.recordset', result.recordset)
                 if (result) {
 
 
 
                     result.recordset.forEach(element => {
-                        console.log('element', element.image)
                         if (element.image != null && element.image != " " && element.image != "" && element.image != undefined) {
                             if (fs.existsSync(`public/userImages/${element.image}`)) {
 
@@ -258,7 +247,6 @@ const login = async (req, res) => {
                                 //console.log('ext', ext)
                                 const image = fs.readFileSync(`public/userImages/${element.image}`, 'base64');
 
-                                console.log('image', image)
                                 //console.log("3")
                                 element.image = `data:image/${ext[ext.length - 1]};base64,${image}`
                                 //console.log("4")

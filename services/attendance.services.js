@@ -35,8 +35,6 @@ const getTodaysAttendance = async (req, res) => {
             .input('siteId', req.siteId)
             .execute(`getTodaysAttendance`);
 
-        console.log('result.recordset', result.recordset)
-
         if (result)
             return result.recordset;
         else
@@ -73,8 +71,6 @@ const getAttendanceByUser = async (req, res) => {
 
 const getAttendanceSheetData = async (req, res) => {
 
-    console.log('req', req)
-
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -95,10 +91,6 @@ const getAttendanceSheetData = async (req, res) => {
 }
 
 const uploadUserImage = async (req, res) => {
-
-
-    console.log('req', req)
-
 
     try {
         //upload logic
@@ -139,7 +131,6 @@ const addAttendance = async (req, res) => {
     try {
         //upload logic
 
-        console.log('req', req)
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.employeeId)
@@ -168,11 +159,9 @@ const addAttendance = async (req, res) => {
 const checkPunchInStatus = async (req, res) => {
 
 
-    console.log('req', req)
     try {
         //upload logic
 
-        console.log('req', req.employeeId, String(moment().format("YYYY/MM/DD")), parseInt(moment().format("MM")), parseInt(moment().format("YYYY")))
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.employeeId)

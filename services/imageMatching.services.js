@@ -44,8 +44,6 @@ const faceReco = async (req, res) => {
         const userStoredImage = new Image();
         userStoredImage.src = `./public/userImages/${userId}.png`
 
-        console.log('userStoredImage', userStoredImage)
-
         const detectionsUser = await faceapi.detectSingleFace(userStoredImage).withFaceLandmarks().withFaceDescriptor();
 
         descriptions.push(detectionsUser.descriptor)

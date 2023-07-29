@@ -12,7 +12,6 @@ const sendResetLink = (req, res) => {
     return miscService.sendResetLink(mailOptions)
         .then(resData => {
 
-            console.log('resData______', resData)
             if (resData == "Success") {
                 res.status(200).json({
                     'success': true,

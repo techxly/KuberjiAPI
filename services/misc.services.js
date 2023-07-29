@@ -15,7 +15,7 @@ var admin = require('firebase-admin');
 var serviceAccount = require("../config/kuberjiapp-firebase-adminsdk-v375a-12e06b5bd7.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount)
 });
 
 const nodemailer = require('nodemailer');
@@ -158,9 +158,10 @@ const sendContactMail = async (req) => {
 
 const addNotifications = async (req) => {
 
-    console.log('req', req)
     try {
         const pool = await poolPromise;
+
+
         const result = await pool.request()
             .input('sMsg', req.sMsg)
             .input('msg', req.msg)
@@ -169,7 +170,9 @@ const addNotifications = async (req) => {
             .input('msgFrom', req.msgFrom)
             .input('msgFor', req.msgFor)
             .input('levelFor', req.level)
+            .input('time', moment(new Date()).format('yyyy-MM-DD HH:mm:ss'))
             .execute(`addNotifications`);
+
 
         if (result) {
 
@@ -177,14 +180,12 @@ const addNotifications = async (req) => {
 
             /* Firebase */
 
+
             const pool = await poolPromise;
             const resultFCM = await pool.request()
                 .input('msgFor', req.msgFor == null ? '' : req.msgFor)
                 .input('levelFor', req.level)
                 .execute(`getFCM`);
-
-            console.log('resultFCM', resultFCM)
-
 
             if (resultFCM.recordset.length > 0) {
 
@@ -199,8 +200,6 @@ const addNotifications = async (req) => {
 
                 })
 
-                console.log('registrationTokens', registrationTokens)
-
                 const message = {
                     notification: {
                         title: req.sMsg,
@@ -211,7 +210,6 @@ const addNotifications = async (req) => {
 
                 admin.messaging().sendMulticast(message)
                     .then((response) => {
-                        console.log('response',response.responses[0].error)
                         console.log(response.successCount + ' messages were sent successfully');
                     });
 
@@ -244,6 +242,7 @@ const addNotifications = async (req) => {
             return null;
     } catch (error) {
         res.status(500);
+        console.log('error', error)
         return error.message;
     }
 

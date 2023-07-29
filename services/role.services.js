@@ -95,7 +95,6 @@ const getRoles = async (req, res) => {
 
 const updateRole = async (req, res) => {
 
-    console.log('req', req)
 
     try {
         const pool = await poolPromise;
@@ -112,7 +111,6 @@ const updateRole = async (req, res) => {
             )
         });
 
-        console.log('JSON.stringify(req.list)', JSON.stringify(req.list))
         const result = await pool.request()
             //.input('role_module', sql.TYPES.TVP, table)
             .input('role_module', JSON.stringify(req.list))
@@ -122,8 +120,6 @@ const updateRole = async (req, res) => {
             .input('description', req.description)
             .execute(`updateRole`);
 
-
-        console.log('result', result)
 
         if (result) {
             return result.recordset;

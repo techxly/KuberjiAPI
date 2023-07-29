@@ -83,7 +83,6 @@ const getPayroll = async (req, res) => {
 }
 
 const getPaySlipDetails = async (req, res) => {
-    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -102,7 +101,6 @@ const getPaySlipDetails = async (req, res) => {
 }
 
 const getPaySlipByEmpMonthYear = async (req, res) => {
-    console.log('req', req)
     try {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -110,7 +108,6 @@ const getPaySlipByEmpMonthYear = async (req, res) => {
             .input('aMonth', parseInt(req.month))
             .input('aYear', parseInt(req.year))
             .execute(`getPaySlipByEmpMonthYear`);
-        console.log('result', result)
 
         if (result)
             return result.recordset;
